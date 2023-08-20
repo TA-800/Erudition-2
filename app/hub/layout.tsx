@@ -2,6 +2,7 @@ import { createServerComponentClient } from "@supabase/auth-helpers-nextjs";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import Link from "next/link";
+import HamburgerMenu, { CustomLink } from "./menu";
 
 export default async function HubLayout({ children }: { children: React.ReactNode }) {
     const supabase = createServerComponentClient({ cookies });
@@ -17,8 +18,8 @@ export default async function HubLayout({ children }: { children: React.ReactNod
     // Children content is the page content (depending on which link is clicked)
     return (
         <>
-            <nav className="w-full flex justify-end items-center border-b border-b-white/10 h-16 lg:px-32 px-4">
-                <div className="font-mono text-2xl mr-auto">Erudition</div>
+            <nav className="bg-zinc-900 w-full fixed top-0 left-0 flex justify-end items-center border-b border-b-white/20 lg:h-24 h-20 lg:px-32 px-4">
+                <div className="lg:text-4xl text-3xl mr-auto">Erudition</div>
                 <div className="flex-row gap-2 lg:flex hidden">
                     <CustomLink href="/hub/study">Study</CustomLink>
                     <CustomLink href="/hub/discussions">Discussions</CustomLink>
@@ -28,31 +29,7 @@ export default async function HubLayout({ children }: { children: React.ReactNod
                     <HamburgerMenu />
                 </div>
             </nav>
-            {children}
+            <div className="lg:mt-32 mt-24">{children}</div>
         </>
-    );
-}
-
-function CustomLink({ href, className, children }: { href: string; className?: string; children: React.ReactNode }) {
-    return (
-        <Link href={href} className={`py-2 px-4 rounded font-mono bg-white text-black ${className ?? ""}`}>
-            {children}
-        </Link>
-    );
-}
-
-function HamburgerMenu() {
-    return (
-        <button className="btn">
-            <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                strokeWidth={1.5}
-                stroke="currentColor"
-                className="w-6 h-6">
-                <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
-            </svg>
-        </button>
     );
 }
