@@ -2,6 +2,12 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer components {
+    .btn {
+        @apply bg-gray-700 text-gray-300 font-bold font-mono py-2 px-4 rounded;
+    }
+}
+
 html,
 body {
     color: white;

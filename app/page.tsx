@@ -36,6 +36,11 @@ export default async function Index() {
 
             <div className="flex flex-col gap-14 max-w-4xl px-3 py-16 lg:py-24">
                 <div className="flex flex-col items-center mb-4 lg:mb-12">
+                    {user && (
+                        <Link href="/hub/study" className="bg-white py-3 px-6 rounded-lg font-mono text-sm text-black">
+                            <strong>{"->"} hub/study</strong>
+                        </Link>
+                    )}
                     <div className="flex gap-8 justify-center items-center">
                         <Link href="https://supabase.com/" target="_blank">
                             <SupabaseLogo />
