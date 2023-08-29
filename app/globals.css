@@ -2,6 +2,12 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer base {
+    .center-pad {
+        @apply lg:px-64 px-4;
+    }
+}
+
 @layer components {
     .btn {
         @apply bg-zinc-700 text-zinc-300 py-2 px-4 rounded border border-white/10;

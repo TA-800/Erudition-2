@@ -1,6 +1,6 @@
 "use client";
 
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useState, useRef, useEffect } from "react";
 
 export default function HamburgerMenu() {
@@ -49,9 +49,13 @@ export default function HamburgerMenu() {
 
 export function CustomLink({ href, className, children }: { href: string; className?: string; children: React.ReactNode }) {
     const router = useRouter();
+    const pathname = usePathname();
+    let isActive = pathname === href;
 
     return (
-        <button onClick={() => router.push(href)} className={`btn bg-zinc-800 text-xl ${className ?? ""}`}>
+        <button
+            onClick={() => router.push(href)}
+            className={`btn ${isActive ? "bg-zinc-700 font-bold" : "bg-zinc-800"} text-xl ${className ?? ""}`}>
             {children}
         </button>
     );

@@ -1,9 +1,9 @@
 import { createServerComponentClient } from "@supabase/auth-helpers-nextjs";
 import { cookies } from "next/headers";
 import Link from "next/link";
-import LogoutButton from "../components/LogoutButton";
-import SupabaseLogo from "../components/SupabaseLogo";
-import NextJsLogo from "../components/NextJsLogo";
+import LogoutButton from "../utils/LogoutButton";
+import SupabaseLogo from "../utils/SupabaseLogo";
+import NextJsLogo from "../utils/NextJsLogo";
 
 export const dynamic = "force-dynamic";
 

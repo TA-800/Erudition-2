@@ -11,10 +11,8 @@ export const metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
     return (
         <html lang="en">
-            <body>
-                <main className={`font-mono tracking-tighter min-h-screen bg-background flex flex-col bg-zinc-800 text-zinc-300`}>
-                    {children}
-                </main>
+            <body className="font-mono tracking-tighter bg-zinc-800 text-zinc-300">
+                <main>{children}</main>
             </body>
         </html>
     );
