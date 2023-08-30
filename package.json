@@ -6,6 +6,7 @@
     "start": "next start"
   },
   "dependencies": {
+    "@radix-ui/react-dialog": "^1.0.4",
     "@supabase/auth-helpers-nextjs": "latest",
     "@supabase/gotrue-js": "^2.47.0",
     "@supabase/supabase-js": "latest",
