@@ -58,6 +58,40 @@ export interface Database {
         }
         Relationships: []
       }
+      enrollment: {
+        Row: {
+          course_id: number
+          created_at: string
+          id: number
+          student_id: string
+        }
+        Insert: {
+          course_id: number
+          created_at?: string
+          id?: number
+          student_id: string
+        }
+        Update: {
+          course_id?: number
+          created_at?: string
+          id?: number
+          student_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "enrollment_course_id_fkey"
+            columns: ["course_id"]
+            referencedRelation: "courses"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "enrollment_student_id_fkey"
+            columns: ["student_id"]
+            referencedRelation: "students"
+            referencedColumns: ["id"]
+          }
+        ]
+      }
       profiles: {
         Row: {
           avatar_url: string | null
@@ -125,7 +159,18 @@ export interface Database {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      getstudentcourses: {
+        Args: {
+          student_id_input: string
+        }
+        Returns: {
+          id: number
+          code: string
+          name: string
+          ei_id: number
+          created_at: string
+        }[]
+      }
     }
     Enums: {
       [_ in never]: never

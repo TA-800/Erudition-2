@@ -20,7 +20,8 @@ export default async function Study() {
                 <p className="opacity-75">Signed in as {data.user!.email}</p>
             </div>
 
-            <Content doesExist={students?.at(0)?.id === data.user!.id} />
+            {/* Pass in userId to avoid calling supabase.auth.getUser() everytime in each comp. Context is overkill. */}
+            <Content doesExistInStudentData={students?.at(0)?.id === data.user!.id} userId={data.user!.id} />
         </div>
     );
 }

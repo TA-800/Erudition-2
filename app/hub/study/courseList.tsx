@@ -1,8 +1,8 @@
 "use client";
 
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
-import { Course } from "./content";
 import { Database } from "@/utils/database.types";
+import { Course } from "./content";
 import { useEffect, useState } from "react";
 
 import * as Dialog from "@radix-ui/react-dialog";
@@ -12,11 +12,13 @@ export default function CourseList({
     selected,
     changeSelected,
     loading,
+    userId,
 }: {
     courses: Course[];
     selected: Course | null;
     changeSelected: (course: Course) => void;
     loading: boolean;
+    userId: string;
 }) {
     return (
         <div className="bg-black/10 border border-white/10 rounded p-4 lg:w-48 w-full flex flex-col gap-4">
@@ -33,27 +35,44 @@ export default function CourseList({
                     </button>
                 ))}
             {/* Show Add button after loading */}
-            {!loading && <AddCourseDialog courses={courses} />}
+            {!loading && <AddCourseDialog courses={courses} userId={userId} />}
         </div>
     );
 }
 
-function AddCourseDialog({ courses }: { courses: Course[] }) {
+function AddCourseDialog({ courses, userId }: { courses: Course[]; userId: string }) {
     const supabase = createClientComponentClient<Database>();
     const [list, setList] = useState<Course[]>([]);
     const [manual, setManual] = useState(false);
 
-    const getCourses = async () => {
-        const { data, error } = await supabase.from("courses").select("*");
+    const getEIOfStudent = async () => {
+        const { data: students, error } = await supabase.from("students").select("*").eq("id", userId);
         if (error) console.log(error);
-        if (data) {
-            const filtered = data.filter((course) => !courses.some((c) => c.id === course.id));
-            setList(filtered);
-        }
+        if (students?.length) return students.at(0)?.ei_id;
+        return null;
+    };
+
+    const getAllButEnrolledCoursesForStudent = async (ei_id: number) => {
+        const enrolledArray = `(${courses.map((course) => course.id).join(",")})`;
+        console.log(enrolledArray);
+        const { data: fetchedCourses, error } = await supabase
+            .from("courses")
+            .select("*")
+            .not("id", "in", enrolledArray)
+            .eq("ei_id", ei_id);
+
+        if (error) console.log(error);
+        if (fetchedCourses) setList(fetchedCourses as Course[]);
     };
 
     useEffect(() => {
-        getCourses();
+        getEIOfStudent().then((ei_id_response: number | null | undefined) => {
+            if (!ei_id_response) {
+                alert("Could not find your EI ID. Please save your student data in Profile and try again.");
+                return;
+            }
+            getAllButEnrolledCoursesForStudent(ei_id_response);
+        });
     }, []);
 
     return (
