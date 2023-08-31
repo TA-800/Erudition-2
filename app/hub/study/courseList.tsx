@@ -44,6 +44,7 @@ function AddCourseDialog({ courses, userId }: { courses: Course[]; userId: strin
     const supabase = createClientComponentClient<Database>();
     const [list, setList] = useState<Course[]>([]);
     const [manual, setManual] = useState(false);
+    const [submitting, setSubmitting] = useState(false);
 
     const getEIOfStudent = async () => {
         const { data: students, error } = await supabase.from("students").select("*").eq("id", userId);
@@ -54,15 +55,45 @@ function AddCourseDialog({ courses, userId }: { courses: Course[]; userId: strin
 
     const getAllButEnrolledCoursesForStudent = async (ei_id: number) => {
         const enrolledArray = `(${courses.map((course) => course.id).join(",")})`;
-        console.log(enrolledArray);
         const { data: fetchedCourses, error } = await supabase
             .from("courses")
             .select("*")
             .not("id", "in", enrolledArray)
             .eq("ei_id", ei_id);
 
-        if (error) console.log(error);
-        if (fetchedCourses) setList(fetchedCourses as Course[]);
+        if (error || !fetchedCourses.length) {
+            console.log(error ?? "Error fetching courses");
+            return;
+        }
+        setList(fetchedCourses as Course[]);
+    };
+
+    const handleNewCourseSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
+        setSubmitting(true);
+
+        // Get form data
+        const formData = new FormData(e.currentTarget);
+        const data = Object.fromEntries(formData.entries());
+        const code = String(data.code).toUpperCase();
+        const name = String(data.name);
+
+        // Reject if code or name is empty
+        if (!code || !name) {
+            alert("Please fill in all fields.");
+            setSubmitting(false);
+            return;
+        }
+
+        const { data: newCourseAndEnrollData, error } = await supabase.rpc("createnewcourseandenroll", {
+            student_id_input: userId,
+            code_input: code,
+            name_input: name,
+        });
+        if (error || !newCourseAndEnrollData.length)
+            alert("Couldn't create new course. Please try again later.\n" + (error ? error.message : ""));
+
+        setSubmitting(false);
     };
 
     useEffect(() => {
@@ -106,16 +137,33 @@ function AddCourseDialog({ courses, userId }: { courses: Course[]; userId: strin
                     </button>
                     <div>
                         {manual ? (
-                            <form className="flex flex-col gap-2">
+                            <form onSubmit={handleNewCourseSubmit} className="flex flex-col gap-2">
                                 <div>
                                     <label htmlFor="code">Course Code</label>
-                                    <input type="text" name="code" className="p-2 bg-zinc-200 rounded w-full" />
+                                    <input required type="text" name="code" className="p-2 bg-zinc-200 rounded w-full" />
                                 </div>
                                 <div>
                                     <label htmlFor="name">Course Name</label>
-                                    <input type="text" name="name" className="p-2 bg-zinc-200 rounded w-full" />
+                                    <input required type="text" name="name" className="p-2 bg-zinc-200 rounded w-full" />
                                 </div>
-                                <button className="btn">Create New</button>
+                                <button className="btn">
+                                    {submitting && (
+                                        <svg
+                                            xmlns="http://www.w3.org/2000/svg"
+                                            fill="none"
+                                            viewBox="0 0 24 24"
+                                            strokeWidth={1.5}
+                                            stroke="currentColor"
+                                            className="w-6 h-6 animate-spin opacity-50">
+                                            <path
+                                                strokeLinecap="round"
+                                                strokeLinejoin="round"
+                                                d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182m0-4.991v4.99"
+                                            />
+                                        </svg>
+                                    )}
+                                    <span>Create New</span>
+                                </button>
                             </form>
                         ) : (
                             <select className="w-full rounded p-2 bg-zinc-200">

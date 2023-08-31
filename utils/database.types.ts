@@ -159,6 +159,19 @@ export interface Database {
       [_ in never]: never
     }
     Functions: {
+      createnewcourseandenroll: {
+        Args: {
+          code_input: string
+          name_input: string
+          student_id_input: string
+        }
+        Returns: {
+          course_id: number
+          created_at: string
+          id: number
+          student_id: string
+        }[]
+      }
       getstudentcourses: {
         Args: {
           student_id_input: string
