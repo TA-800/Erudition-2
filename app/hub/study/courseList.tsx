@@ -6,6 +6,7 @@ import { Course } from "./content";
 import { useEffect, useState } from "react";
 
 import * as Dialog from "@radix-ui/react-dialog";
+import PlusIcon from "@/utils/plusIcon";
 
 export default function CourseList({
     courses,
@@ -22,6 +23,7 @@ export default function CourseList({
 }) {
     return (
         <div className="bg-black/10 border border-white/10 rounded p-4 lg:w-48 w-full flex flex-col gap-4">
+            <p className="text-3xl tracking-wide font-black text-center">COURSES</p>
             {/* Skeleton loader */}
             {loading && Array.from({ length: 2 }).map((_, i) => <div key={i} className="btn animate-pulse"></div>)}
             {/* Show list of courses after loading */}
@@ -109,13 +111,7 @@ function AddCourseDialog({ courses, userId }: { courses: Course[]; userId: strin
     return (
         <Dialog.Root>
             <Dialog.Trigger className="btn lg:mt-auto">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-5 h-5">
-                    <path
-                        fillRule="evenodd"
-                        d="M10 18a8 8 0 100-16 8 8 0 000 16zm.75-11.25a.75.75 0 00-1.5 0v2.5h-2.5a.75.75 0 000 1.5h2.5v2.5a.75.75 0 001.5 0v-2.5h2.5a.75.75 0 000-1.5h-2.5v-2.5z"
-                        clipRule="evenodd"
-                    />
-                </svg>
+                <PlusIcon />
                 <span>Add</span>
             </Dialog.Trigger>
             <Dialog.Portal>

@@ -25,12 +25,7 @@ export default async function Profile() {
                 </div>
                 <div className="flex flex-col gap-2">
                     <p className="text-xl">Year</p>
-                    <input
-                        type="number"
-                        name="year"
-                        className="p-2 rounded bg-zinc-900 w-full opacity-75"
-                        defaultValue={students?.length ? students.at(0)!.Year : 0}
-                    />
+                    <input type="number" name="year" className="ipt" defaultValue={students?.length ? students.at(0)!.Year : 0} />
                 </div>
                 <button className="btn bg-green-800 text-green-300 mt-8">Save</button>
                 <ProfileErrorMessages />

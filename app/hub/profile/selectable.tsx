@@ -31,7 +31,7 @@ export default forwardRef<HTMLSelectElement, ComponentProps<"select"> & { eiId: 
     }, []);
 
     return (
-        <select ref={ref} {...rest} className="p-2 bg-zinc-900 rounded" onFocus={getEI}>
+        <select ref={ref} {...rest} className="slct" onFocus={getEI}>
             {loading ? (
                 // If loading, show loading option
                 <option>Loading...</option>

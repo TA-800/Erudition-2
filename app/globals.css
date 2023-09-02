@@ -12,6 +12,14 @@
     .btn {
         @apply bg-zinc-700 text-zinc-300 py-2 px-4 rounded border border-white/10 h-12 flex flex-row gap-1 justify-center items-center;
     }
+
+    .slct {
+        @apply p-2 bg-zinc-900 rounded;
+    }
+
+    .ipt {
+        @apply p-2 rounded bg-zinc-900 w-full;
+    }
 }
 
 * {
