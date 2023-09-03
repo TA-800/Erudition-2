@@ -29,9 +29,9 @@ export default function Toolbar({
                 onChange={(e) => changeSearch(e.target.value)}
                 placeholder="🔍 Search"
             />
-            <button className="btn ml-auto">
+            <button className="btn ml-auto px-2 md:px-4">
                 <PlusIcon />
-                <span>Add</span>
+                <span className="hidden md:inline">Add</span>
             </button>
             <select className="slct" value={content} onChange={(e) => changeContent(e.target.value as "Modules" | "Assignments")}>
                 <option value="Modules">Modules</option>

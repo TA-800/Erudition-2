@@ -13,6 +13,14 @@
         @apply bg-zinc-700 text-zinc-300 py-2 px-4 rounded border border-white/10 h-12 flex flex-row gap-1 justify-center items-center;
     }
 
+    .editor-btn {
+        @apply h-6 p-1 bg-zinc-600 hover:bg-zinc-500 text-zinc-300 flex justify-center items-center;
+    }
+
+    .eb-active {
+        @apply border;
+    }
+
     .slct {
         @apply p-2 bg-zinc-900 rounded;
     }
@@ -27,4 +35,12 @@
     /* scrollbar-gutter: stable both-edges; */
     /* Change scrollbar thumb color to black and background color to zinc-800 */
     scrollbar-color: rgb(82 82 91) rgb(63 63 70);
+}
+
+ol {
+    list-style-type: decimal;
+}
+
+ul {
+    list-style-type: disc;
 }

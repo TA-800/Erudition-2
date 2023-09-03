@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import CourseList from "./courseList";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import Toolbar from "./toolbar";
+import NotesEditor from "./notesEditor";
 
 export type Course = Database["public"]["Tables"]["courses"]["Row"];
 
@@ -43,12 +44,22 @@ export default function Content({ doesExistInStudentData, userId }: { doesExistI
     }
 
     return (
-        <div className="w-full h-96 flex lg:flex-row flex-col gap-4">
+        <div className="w-full h-fit flex lg:flex-row flex-col gap-4">
+            {/* Left side (courses) */}
             <CourseList courses={courses} selected={selected} changeSelected={changeSelected} loading={loading} userId={userId} />
 
-            <div className="bg-black/10 rounded border border-white/10 p-4 flex flex-col w-full h-full gap-2">
+            {/* Right side (content) */}
+            <div className="bg-black/10 rounded border border-white/10 p-4 flex flex-col w-full gap-2">
                 <Toolbar states={{ search, content }} setters={{ changeSearch, changeContent }} />
-                <div className="w-full h-full grid lg:grid-cols-3 lg:grid-rows-none grid-rows-3"></div>
+                {/* Modules + Editor wrapper */}
+                <div className="w-full grid gap-1 lg:grid-cols-3 lg:grid-rows-none">
+                    {/* Modules */}
+                    <div className="border border-white/20 rounded w-full h-96 lg:h-full"></div>
+                    {/* Editor */}
+                    <div className="w-full rounded lg:col-span-2">
+                        <NotesEditor />
+                    </div>
+                </div>
             </div>
         </div>
     );
