@@ -6,6 +6,8 @@ import CourseList from "./courseList";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import Toolbar from "./toolbar";
 import NotesEditor from "./notesEditor";
+import PlusIcon from "@/utils/plusIcon";
+import AddModuleDialog from "./addModuleDialog";
 
 export type Course = Database["public"]["Tables"]["courses"]["Row"];
 
@@ -50,11 +52,14 @@ export default function Content({ doesExistInStudentData, userId }: { doesExistI
 
             {/* Right side (content) */}
             <div className="bg-black/10 rounded border border-white/10 p-4 flex flex-col w-full gap-2">
-                <Toolbar states={{ search, content }} setters={{ changeSearch, changeContent }} />
+                {/* Toolbar (top) */}
+                <Toolbar states={{ search, content }} setters={{ changeSearch, changeContent }}>
+                    <AddModuleDialog userId={userId} selectedCourse={selected} />
+                </Toolbar>
                 {/* Modules + Editor wrapper */}
                 <div className="w-full grid gap-1 lg:grid-cols-3 lg:grid-rows-none">
                     {/* Modules */}
-                    <div className="border border-white/20 rounded w-full h-96 lg:h-full"></div>
+                    <div className="flex flex-col p-2 border border-white/20 rounded w-full h-96 lg:h-full"></div>
                     {/* Editor */}
                     <div className="w-full rounded lg:col-span-2">
                         <NotesEditor />

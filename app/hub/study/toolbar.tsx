@@ -1,10 +1,9 @@
 "use client";
 
-import PlusIcon from "@/utils/plusIcon";
-
 export default function Toolbar({
     states,
     setters,
+    children,
 }: {
     states: {
         search: string;
@@ -14,14 +13,15 @@ export default function Toolbar({
         changeSearch: (value: string) => void;
         changeContent: (value: "Modules" | "Assignments") => void;
     };
+    children?: React.ReactNode;
 }) {
     // destructuring
     const { search, content } = states;
     const { changeSearch, changeContent } = setters;
 
     return (
-        <div className="w-full h-14 flex flex-row gap-2 justify-between">
-            {/* Input search bar + an add button (functionality todo later) + dropdown (modules or assignments) */}
+        <div className="w-full flex flex-row gap-2 justify-between">
+            {/* Input search bar */}
             <input
                 className="ipt"
                 type="text"
@@ -29,14 +29,12 @@ export default function Toolbar({
                 onChange={(e) => changeSearch(e.target.value)}
                 placeholder="🔍 Search"
             />
-            <button className="btn ml-auto px-2 md:px-4">
-                <PlusIcon />
-                <span className="hidden md:inline">Add</span>
-            </button>
             <select className="slct" value={content} onChange={(e) => changeContent(e.target.value as "Modules" | "Assignments")}>
                 <option value="Modules">Modules</option>
                 <option value="Assignments">Assignments</option>
             </select>
+            {/* Add button */}
+            {children}
         </div>
     );
 }

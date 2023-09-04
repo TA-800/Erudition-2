@@ -35,6 +35,8 @@ export default function NotesEditor() {
                 content: {
                     color: "#e4e4e7",
                     backgroundColor: "transparent",
+                    maxHeight: "65vh",
+                    overflowY: "scroll",
                 },
                 toolbar: {
                     backgroundColor: "#18181b",
