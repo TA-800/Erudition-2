@@ -42,10 +42,7 @@ export default function CourseList({
                 <div className="lg:mt-auto">
                     <div className="flex flex-row justify-between">
                         <AddCourseDialog courses={courses} userId={userId} />
-                        <DeleteSelectedCourseDialog
-                            selected={selected}
-                            changeToRandomAfterDel={() => changeSelected(courses.at(0)!)}
-                        />
+                        <DeleteSelectedCourseDialog userId={userId} selected={selected} />
                     </div>
                 </div>
             )}
@@ -53,17 +50,23 @@ export default function CourseList({
     );
 }
 
-function DeleteSelectedCourseDialog({
-    selected,
-    changeToRandomAfterDel,
-}: {
-    selected: Course | null;
-    changeToRandomAfterDel: () => void;
-}) {
+function DeleteSelectedCourseDialog({ userId, selected }: { userId: string; selected: Course | null }) {
     const supabase = createClientComponentClient<Database>();
 
     const unenrollFromSelectedCourse = async () => {
         if (!selected) return;
+
+        const { error } = await supabase.from("enrollment").delete().match({
+            course_id: selected.id,
+            student_id: userId,
+        });
+
+        if (error) {
+            alert("Couldn't unenroll from course. Please try again later.\n" + (error?.message ?? ""));
+            return;
+        }
+
+        window.location.reload();
     };
 
     return (
@@ -151,13 +154,12 @@ function AddCourseDialog({ courses, userId }: { courses: Course[]; userId: strin
                 })
                 .select();
 
+            setSubmitting(false);
+
             // If any error or no data, alert user
             if (error || !newEnrollData.length)
-                alert("Couldn't enroll in course. Please try again later.\n" + (error ? error.message : ""));
-            else {
-                setSubmitting(false);
-                window.location.reload();
-            }
+                alert("Couldn't enroll in course. Please try again later.\n" + (error?.message ?? ""));
+            else window.location.reload();
         } else {
             const code = String(data.code).toUpperCase();
             const name = String(data.name);
@@ -175,13 +177,12 @@ function AddCourseDialog({ courses, userId }: { courses: Course[]; userId: strin
                 name_input: name,
             });
 
+            setSubmitting(false);
+
             // If any error or no data, alert user
             if (error || !newCourseAndEnrollData.length)
                 alert("Couldn't create new course. Please try again later.\n" + (error ? error.message : ""));
-            else {
-                setSubmitting(false);
-                window.location.reload();
-            }
+            else window.location.reload();
         }
     };
 

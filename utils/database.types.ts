@@ -92,6 +92,37 @@ export interface Database {
           }
         ]
       }
+      modules: {
+        Row: {
+          created_at: string
+          enroll_id: number
+          id: number
+          name: string
+          notes: string
+        }
+        Insert: {
+          created_at?: string
+          enroll_id: number
+          id?: number
+          name: string
+          notes?: string
+        }
+        Update: {
+          created_at?: string
+          enroll_id?: number
+          id?: number
+          name?: string
+          notes?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "modules_enroll_id_fkey"
+            columns: ["enroll_id"]
+            referencedRelation: "enrollment"
+            referencedColumns: ["id"]
+          }
+        ]
+      }
       profiles: {
         Row: {
           avatar_url: string | null
