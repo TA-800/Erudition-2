@@ -2,6 +2,7 @@
 
 import { usePathname, useRouter } from "next/navigation";
 import { useState, useRef, useEffect } from "react";
+import { useOnClickOutside } from "usehooks-ts";
 
 export default function HamburgerMenu() {
     const [open, setOpen] = useState(false);
@@ -13,15 +14,27 @@ export default function HamburgerMenu() {
         }
     };
 
+    const handleClickOutside = () => {
+        if (open) setOpen(false);
+    };
+
     // If is open and escape is pressed, close the menu
     useEffect(() => {
         document.addEventListener("keydown", closeMenuOnEscape);
         return () => document.removeEventListener("keydown", closeMenuOnEscape);
     }, [open]);
 
+    // Default is mousedown param, which we do not want because
+    // if it is clicked on the menu, it will quickly close and open
+    useOnClickOutside(ref, handleClickOutside, "mouseup");
+
     return (
         <>
-            <button onClick={() => setOpen(!open)} className="btn bg-zinc-800">
+            <button
+                onClick={() => {
+                    if (!open) setOpen(true);
+                }}
+                className="btn bg-zinc-800">
                 <svg
                     xmlns="http://www.w3.org/2000/svg"
                     fill="none"

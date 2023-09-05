@@ -7,6 +7,7 @@ import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import Toolbar from "./toolbar";
 import NotesEditor from "./notesEditor";
 import AddModuleDialog from "./addModuleDialog";
+import DeleteModuleDialog from "./deleteModuleDialog";
 
 export type Course = Database["public"]["Tables"]["courses"]["Row"];
 export type Module = Database["public"]["Tables"]["modules"]["Row"];
@@ -21,7 +22,7 @@ export default function Content({ doesExistInStudentData, userId }: { doesExistI
     // Modules
     const [modules, setModules] = useState<Module[]>([]);
     const [selectedModule, setSelectedModule] = useState<Module | null>(null);
-    const changeSelectedModule = (module: Module) => setSelectedModule(module);
+    // const changeSelectedModule = (module: Module) => setSelectedModule(module);
     const [loadingModules, setLoadingModules] = useState(false); // Loading state for Modules
     // Filters
     const [search, setSearch] = useState("");
@@ -52,7 +53,7 @@ export default function Content({ doesExistInStudentData, userId }: { doesExistI
             .single();
 
         if (!enrollData || enrollDataError) {
-            alert("Error fetching enroll ID for course.");
+            console.log(enrollDataError ?? "enrollData was null.");
             return;
         }
 
@@ -63,7 +64,7 @@ export default function Content({ doesExistInStudentData, userId }: { doesExistI
             .match({ enroll_id: enrollData.id });
 
         if (modulesError || modules === null) {
-            alert("Error fetching modules for course.");
+            alert("Error fetching modules for course." + modulesError?.message ?? "");
             return;
         }
 
@@ -77,6 +78,7 @@ export default function Content({ doesExistInStudentData, userId }: { doesExistI
 
     useEffect(() => {
         if (!selectedCourse) return;
+        setSelectedModule(null);
         setLoadingModules(true);
         // Fetch modules for course
         fetchModulesForCourse(selectedCourse.id).then(() => setLoadingModules(false));
@@ -106,24 +108,38 @@ export default function Content({ doesExistInStudentData, userId }: { doesExistI
                 {/* Toolbar (top) */}
                 <Toolbar states={{ search, content }} setters={{ changeSearch, changeContent }}>
                     <AddModuleDialog userId={userId} selectedCourse={selectedCourse} />
+                    <DeleteModuleDialog selectedModule={selectedModule} />
                 </Toolbar>
                 {/* Modules + Editor wrapper */}
                 <div className="w-full grid gap-1 lg:grid-cols-3 lg:grid-rows-none">
                     {/* Modules */}
-                    <div className="flex flex-col p-2 border border-white/20 rounded w-full h-96 lg:h-full">
-                        {modules.map((module) => {
-                            if (loadingModules) return <p>Loading...</p>;
-                            if (modules.length === 0) return <p>No modules.</p>;
-                            return (
-                                <div key={module.id}>
-                                    <p>{module.name}</p>
-                                </div>
-                            );
-                        })}
+                    <div className="flex flex-col gap-4 p-2 border border-white/20 rounded w-full h-96 lg:h-full overflow-y-scroll">
+                        {loadingModules && <p>Loading modules...</p>}
+                        {/* If we have no modules */}
+                        {!loadingModules && modules.length === 0 && <p>No modules found.</p>}
+                        {/* If we have >= 1 module */}
+                        {!loadingModules &&
+                            modules.length > 0 &&
+                            modules
+                                .sort(
+                                    (a, b) => new Date(a.created_at).getTime() - new Date(b.created_at).getTime() // Sort by created_at
+                                )
+                                .map((module, i) => (
+                                    <div
+                                        key={module.id}
+                                        onClick={() => setSelectedModule(module)}
+                                        className={`${
+                                            selectedModule?.id === module.id ? "underline-offset-4 underline" : ""
+                                        } hover:text-white cursor-pointer`}>
+                                        <p>
+                                            {i + 1}. {module.name}
+                                        </p>
+                                    </div>
+                                ))}
                     </div>
                     {/* Editor */}
                     <div className="w-full rounded lg:col-span-2">
-                        <NotesEditor />
+                        <NotesEditor selectedModule={selectedModule} />
                     </div>
                 </div>
             </div>

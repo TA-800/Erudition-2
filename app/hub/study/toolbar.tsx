@@ -20,7 +20,7 @@ export default function Toolbar({
     const { changeSearch, changeContent } = setters;
 
     return (
-        <div className="w-full flex flex-row gap-2 justify-between">
+        <div className="w-full flex flex-row flex-wrap lg:flex-nowrap gap-2 justify-between">
             {/* Input search bar */}
             <input
                 className="ipt"
@@ -33,7 +33,7 @@ export default function Toolbar({
                 <option value="Modules">Modules</option>
                 <option value="Assignments">Assignments</option>
             </select>
-            {/* Add button */}
+            {/* Add + Delete button */}
             {children}
         </div>
     );
