@@ -1,7 +1,5 @@
 "use client";
 
-import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
-import { Database } from "@/utils/database.types";
 import { Course } from "./content";
 import { useEffect, useState } from "react";
 
@@ -9,6 +7,8 @@ import * as Dialog from "@radix-ui/react-dialog";
 import * as AlertDialog from "@radix-ui/react-alert-dialog";
 import PlusIcon from "@/utils/plusIcon";
 import DeleteIcon from "@/utils/deleteIcon";
+import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
+import { Database } from "@/utils/database.types";
 
 export default function CourseList({
     courses,
@@ -16,12 +16,16 @@ export default function CourseList({
     changeSelected,
     loading,
     userId,
+    deleteCourseFromState,
+    addCourseToState,
 }: {
     courses: Course[];
     selected: Course | null;
     changeSelected: (course: Course) => void;
     loading: boolean;
     userId: string;
+    deleteCourseFromState: () => void;
+    addCourseToState: (newCourse: Course) => void;
 }) {
     return (
         <div className="bg-black/10 border border-white/10 rounded p-4 lg:w-48 w-full flex flex-col gap-4">
@@ -42,8 +46,8 @@ export default function CourseList({
             {!loading && (
                 <div className="lg:mt-auto">
                     <div className="flex flex-row justify-between">
-                        <AddCourseDialog courses={courses} userId={userId} />
-                        <DeleteSelectedCourseDialog userId={userId} selected={selected} />
+                        <AddCourseDialog courses={courses} userId={userId} addCourseToState={addCourseToState} />
+                        <DeleteSelectedCourseDialog selected={selected} deleteCourseFromState={deleteCourseFromState} />
                     </div>
                 </div>
             )}
@@ -51,25 +55,13 @@ export default function CourseList({
     );
 }
 
-function DeleteSelectedCourseDialog({ userId, selected }: { userId: string; selected: Course | null }) {
-    const supabase = createClientComponentClient<Database>();
-
-    const unenrollFromSelectedCourse = async () => {
-        if (!selected) return;
-
-        const { error } = await supabase.from("enrollment").delete().match({
-            course_id: selected.id,
-            student_id: userId,
-        });
-
-        if (error) {
-            alert("Couldn't unenroll from course. Please try again later.\n" + (error?.message ?? ""));
-            return;
-        }
-
-        window.location.reload();
-    };
-
+function DeleteSelectedCourseDialog({
+    selected,
+    deleteCourseFromState,
+}: {
+    selected: Course | null;
+    deleteCourseFromState: () => void;
+}) {
     return (
         <AlertDialog.Root>
             <AlertDialog.Trigger disabled={selected === null} className="btn bg-red-800">
@@ -86,7 +78,7 @@ function DeleteSelectedCourseDialog({ userId, selected }: { userId: string; sele
                     </AlertDialog.Description>
                     <div className="mt-5 flex justify-end gap-6">
                         <AlertDialog.Cancel className="btn">Cancel</AlertDialog.Cancel>
-                        <AlertDialog.Action onClick={unenrollFromSelectedCourse} className="btn bg-red-800">
+                        <AlertDialog.Action onClick={deleteCourseFromState} className="btn bg-red-800">
                             Unenroll
                         </AlertDialog.Action>
                     </div>
@@ -96,11 +88,20 @@ function DeleteSelectedCourseDialog({ userId, selected }: { userId: string; sele
     );
 }
 
-function AddCourseDialog({ courses, userId }: { courses: Course[]; userId: string }) {
+function AddCourseDialog({
+    courses,
+    userId,
+    addCourseToState,
+}: {
+    courses: Course[];
+    userId: string;
+    addCourseToState: (newCourse: Course) => void;
+}) {
     const supabase = createClientComponentClient<Database>();
     const [list, setList] = useState<Course[]>([]);
     const [manual, setManual] = useState(false);
     const [submitting, setSubmitting] = useState(false);
+    const [dialogOpen, setDialogOpen] = useState(false);
 
     const getEIOfStudent = async () => {
         const { data: students, error } = await supabase.from("students").select("*").eq("id", userId);
@@ -144,11 +145,14 @@ function AddCourseDialog({ courses, userId }: { courses: Course[]; userId: strin
                 .select()
                 .single();
 
-            setSubmitting(false);
-
             // If any error or no data, alert user
             if (error || !newEnrollData) alert("Couldn't enroll in course. Please try again later.\n" + (error?.message ?? ""));
-            else window.location.reload();
+            else {
+                const { data: newCourseData, error } = await supabase.from("courses").select("*").eq("id", code).single();
+                if (error || !newCourseData)
+                    alert("Couldn't fetch new course. Please try again later.\n" + (error?.message ?? ""));
+                else addCourseToState(newCourseData as Course);
+            }
         } else {
             const code = String(data.code).toUpperCase();
             const name = String(data.name);
@@ -166,16 +170,25 @@ function AddCourseDialog({ courses, userId }: { courses: Course[]; userId: strin
                 name_input: name,
             });
 
-            setSubmitting(false);
-
             // If any error or no data, alert user
             if (error || !newCourseAndEnrollData.length)
                 alert("Couldn't create new course. Please try again later.\n" + (error ? error.message : ""));
-            else window.location.reload();
+            else {
+                const { data: newCourseData, error } = await supabase.from("courses").select("*").eq("code", code).single();
+                if (error || !newCourseData)
+                    alert("Couldn't fetch new course. Please try again later.\n" + (error?.message ?? ""));
+                else addCourseToState(newCourseData as Course);
+            }
         }
+
+        setSubmitting(false);
+        setDialogOpen(false);
     };
 
+    // Update getAllButEnrolledCoursesForStudent when courses state changes (e.g. when a course is deleted)
     useEffect(() => {
+        if (courses.length === 0) return;
+
         getEIOfStudent().then((ei_id_response: number | null | undefined) => {
             if (!ei_id_response) {
                 alert("Could not find your EI ID. Please save your student data in Profile and try again.");
@@ -183,10 +196,10 @@ function AddCourseDialog({ courses, userId }: { courses: Course[]; userId: strin
             }
             getAllButEnrolledCoursesForStudent(ei_id_response);
         });
-    }, []);
+    }, [courses]);
 
     return (
-        <Dialog.Root>
+        <Dialog.Root open={dialogOpen} onOpenChange={setDialogOpen}>
             <Dialog.Trigger className="btn">
                 <PlusIcon />
             </Dialog.Trigger>

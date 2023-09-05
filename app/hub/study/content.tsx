@@ -22,12 +22,10 @@ export default function Content({ doesExistInStudentData, userId }: { doesExistI
     // Modules
     const [modules, setModules] = useState<Module[]>([]);
     const [selectedModule, setSelectedModule] = useState<Module | null>(null);
-    // const changeSelectedModule = (module: Module) => setSelectedModule(module);
     const [loadingModules, setLoadingModules] = useState(false); // Loading state for Modules
     // Filters
     const [search, setSearch] = useState("");
     const [content, setContent] = useState<"Modules" | "Assignments">("Modules");
-
     const changeContent = (value: "Modules" | "Assignments") => setContent(value);
     const changeSearch = (value: string) => setSearch(value);
 
@@ -72,6 +70,69 @@ export default function Content({ doesExistInStudentData, userId }: { doesExistI
         setLoadingModules(false);
     };
 
+    // Add course to courses state
+    const addCourseToState = (newCourse: Course) => {
+        setCourses((prev) => [...prev, newCourse]);
+    };
+
+    // Delete course from courses state (don't need to pass in course param because selectedCourse will be the one to delete, which we already have)
+    const deleteCourseFromState = async () => {
+        if (!selectedCourse) return;
+
+        const { error } = await supabase.from("enrollment").delete().match({
+            course_id: selectedCourse.id,
+            student_id: userId,
+        });
+
+        if (error) {
+            alert("Couldn't unenroll from course. Please try again later.\n" + (error?.message ?? ""));
+            return;
+        }
+
+        // Remove course from courses state
+        setCourses((prev) => prev.filter((course) => course.id !== selectedCourse.id));
+        // Change selectedCourse state
+        setSelectedCourse(null);
+    };
+
+    // Add new module to modules list state
+    const addNewModuleToState = (newModule: Module) => {
+        setModules((prev) => [...prev, newModule]);
+    };
+
+    // Delete module from modules list state
+    const deleteModuleFromState = (moduleToDelete: Module) => {
+        // Change selectedModule state if it is the module that is being deleted
+        if (selectedModule?.id === moduleToDelete.id) setSelectedModule(null);
+        setModules((prev) => prev.filter((module) => module.id !== moduleToDelete.id));
+    };
+
+    // Update notes for module
+    const updateNotes = async (notes: string) => {
+        const { data: updatedModule, error: updatedModuleError } = await supabase
+            .from("modules")
+            .update({ notes })
+            .match({ id: selectedModule!.id })
+            .select()
+            .single();
+
+        if (!updatedModule || updatedModuleError) {
+            alert("Error updating module notes." + updatedModuleError?.message ?? "");
+            return;
+        }
+
+        // Update modules state
+        setModules((prev) => {
+            const index = prev.findIndex((module) => module.id === updatedModule.id);
+            const newModules = [...prev];
+            newModules[index] = updatedModule;
+            return newModules;
+        });
+
+        // Update selectedModule state
+        setSelectedModule(updatedModule);
+    };
+
     useEffect(() => {
         fetchCoursesForStudent().finally(() => setLoadingCourses(false));
     }, []);
@@ -101,14 +162,16 @@ export default function Content({ doesExistInStudentData, userId }: { doesExistI
                 changeSelected={changeSelected}
                 loading={loadingCourses}
                 userId={userId}
+                deleteCourseFromState={deleteCourseFromState}
+                addCourseToState={addCourseToState}
             />
 
             {/* Right side (content) */}
             <div className="bg-black/10 rounded border border-white/10 p-4 flex flex-col w-full gap-2">
                 {/* Toolbar (top) */}
                 <Toolbar states={{ search, content }} setters={{ changeSearch, changeContent }}>
-                    <AddModuleDialog userId={userId} selectedCourse={selectedCourse} />
-                    <DeleteModuleDialog selectedModule={selectedModule} />
+                    <AddModuleDialog userId={userId} selectedCourse={selectedCourse} addNewModuleToState={addNewModuleToState} />
+                    <DeleteModuleDialog selectedModule={selectedModule} deleteModuleFromState={deleteModuleFromState} />
                 </Toolbar>
                 {/* Modules + Editor wrapper */}
                 <div className="w-full grid gap-1 lg:grid-cols-3 lg:grid-rows-none">
@@ -139,7 +202,9 @@ export default function Content({ doesExistInStudentData, userId }: { doesExistI
                     </div>
                     {/* Editor */}
                     <div className="w-full rounded lg:col-span-2">
-                        <NotesEditor selectedModule={selectedModule} />
+                        {selectedModule && (
+                            <NotesEditor key={selectedModule.id} selectedModule={selectedModule} updateNotes={updateNotes} />
+                        )}
                     </div>
                 </div>
             </div>

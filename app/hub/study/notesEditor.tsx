@@ -10,10 +10,16 @@ import SubScript from "@tiptap/extension-subscript";
 import { Module } from "./content";
 import { useEffect, useState } from "react";
 
-const content =
-    '<h2 style="text-align: center;">Welcome to Mantine rich text editor</h2><p><code>RichTextEditor</code> component focuses on usability and is designed to be as simple as possible to bring a familiar editing experience to regular users. <code>RichTextEditor</code> is based on <a href="https://tiptap.dev/" rel="noopener noreferrer" target="_blank">Tiptap.dev</a> and supports all of its features:</p><ul><li>General text formatting: <strong>bold</strong>, <em>italic</em>, <u>underline</u>, <s>strike-through</s> </li><li>Headings (h1-h6)</li><li>Sub and super scripts (<sup>&lt;sup /&gt;</sup> and <sub>&lt;sub /&gt;</sub> tags)</li><li>Ordered and bullet lists</li><li>Text align&nbsp;</li><li>And all <a href="https://tiptap.dev/extensions" target="_blank" rel="noopener noreferrer">other extensions</a></li></ul>';
+const content = "<h2>Hi, and welcome to Erudition!</h2><p>This is a WYSIWYG editor in which you can write your own notes!</p>";
 
-export default function NotesEditor({ selectedModule }: { selectedModule: Module | null }) {
+export default function NotesEditor({
+    selectedModule,
+    updateNotes,
+}: {
+    selectedModule: Module;
+    // updateNotes: (notes: string) => Promise<Module | undefined>;
+    updateNotes: (notes: string) => void;
+}) {
     const editor = useEditor({
         extensions: [
             StarterKit,
@@ -23,17 +29,20 @@ export default function NotesEditor({ selectedModule }: { selectedModule: Module
             SubScript,
             TextAlign.configure({ types: ["heading", "paragraph"] }),
         ],
-        content: selectedModule?.notes !== "" ? selectedModule?.notes : content,
+        content: selectedModule.notes ?? content,
     });
 
     // Need state to force re-render (updates to editor.isEditable don't re-render)
     const [editing, setEditing] = useState(true);
 
+    const handleEditorContentSave = async () => {
+        if (!editor) return;
+        updateNotes(editor.getHTML());
+    };
+
     useEffect(() => {
         editor?.setEditable(editing);
     }, [editing]);
-
-    if (!selectedModule) return null;
 
     return (
         <RichTextEditor
@@ -61,7 +70,8 @@ export default function NotesEditor({ selectedModule }: { selectedModule: Module
                 },
             }}
             editor={editor}>
-            <RichTextEditor.Toolbar sticky stickyOffset={60}>
+            <RichTextEditor.Toolbar sticky stickyOffset={96}>
+                {/* Edit button */}
                 <button className={`btn h-auto p-px ${editing ? "border-white/50" : ""}`} onClick={() => setEditing(!editing)}>
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-5 h-5">
                         <path d="M5.433 13.917l1.262-3.155A4 4 0 017.58 9.42l6.92-6.918a2.121 2.121 0 013 3l-6.92 6.918c-.383.383-.84.685-1.343.886l-3.154 1.262a.5.5 0 01-.65-.65z" />
@@ -102,7 +112,8 @@ export default function NotesEditor({ selectedModule }: { selectedModule: Module
                     </>
                 )}
                 <RichTextEditor.ControlsGroup>
-                    <button className="btn h-auto py-px px-1">
+                    {/* Save button */}
+                    <button onClick={handleEditorContentSave} className="btn h-auto py-px px-1">
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-5 h-5">
                             <path
                                 fillRule="evenodd"

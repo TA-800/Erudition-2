@@ -5,7 +5,13 @@ import { Database } from "@/utils/database.types";
 import { Module } from "./content";
 import DeleteIcon from "@/utils/deleteIcon";
 
-export default function DeleteModuleDialog({ selectedModule }: { selectedModule: Module | null }) {
+export default function DeleteModuleDialog({
+    selectedModule,
+    deleteModuleFromState,
+}: {
+    selectedModule: Module | null;
+    deleteModuleFromState: (moduleToDelete: Module) => void;
+}) {
     const supabase = createClientComponentClient<Database>();
 
     const deleteSelectedModule = async () => {
@@ -19,8 +25,7 @@ export default function DeleteModuleDialog({ selectedModule }: { selectedModule:
             return;
         }
 
-        // TODO: Add soft refresh
-        window.location.reload();
+        deleteModuleFromState(selectedModule);
     };
 
     return (

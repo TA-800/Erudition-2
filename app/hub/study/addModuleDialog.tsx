@@ -2,15 +2,24 @@
 
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import { Database } from "@/utils/database.types";
-import { Course } from "./content";
-import { useEffect, useState } from "react";
+import { Course, Module } from "./content";
+import { useState } from "react";
 
 import * as Dialog from "@radix-ui/react-dialog";
 import PlusIcon from "@/utils/plusIcon";
 
-export default function AddModuleDialog({ userId, selectedCourse }: { userId: string; selectedCourse: Course | null }) {
+export default function AddModuleDialog({
+    userId,
+    selectedCourse,
+    addNewModuleToState,
+}: {
+    userId: string;
+    selectedCourse: Course | null;
+    addNewModuleToState: (newModule: Module) => void;
+}) {
     const supabase = createClientComponentClient<Database>();
     const [submitting, setSubmitting] = useState(false);
+    const [dialogOpen, setDialogOpen] = useState(false);
 
     const handleNewModuleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
@@ -46,16 +55,18 @@ export default function AddModuleDialog({ userId, selectedCourse }: { userId: st
 
         if (!newModule || newModuleError) {
             console.log(newModuleError ?? "newModule was null.");
-            return;
+        } else {
+            // Add new module to modules state
+            addNewModuleToState(newModule);
         }
-
-        // Add new module to modules state
-        // TODO: Add soft refresh
-        window.location.reload();
+        // Change submit button back to normal
+        setSubmitting(false);
+        // Close dialog
+        setDialogOpen(false);
     };
 
     return (
-        <Dialog.Root>
+        <Dialog.Root open={dialogOpen} onOpenChange={setDialogOpen}>
             <Dialog.Trigger disabled={selectedCourse === null} className="btn lg:px-4 px-3">
                 <PlusIcon />
             </Dialog.Trigger>
