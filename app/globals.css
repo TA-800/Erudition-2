@@ -6,6 +6,10 @@
     .center-pad {
         @apply lg:px-64 px-4;
     }
+
+    .center-margin {
+        @apply lg:mx-64 mx-4;
+    }
 }
 
 @layer components {

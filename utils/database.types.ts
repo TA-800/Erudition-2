@@ -11,6 +11,7 @@ export interface Database {
     Tables: {
       assignments: {
         Row: {
+          completed: boolean
           created_at: string
           deadline: string
           enroll_id: number
@@ -18,6 +19,7 @@ export interface Database {
           name: string
         }
         Insert: {
+          completed?: boolean
           created_at?: string
           deadline?: string
           enroll_id: number
@@ -25,6 +27,7 @@ export interface Database {
           name: string
         }
         Update: {
+          completed?: boolean
           created_at?: string
           deadline?: string
           enroll_id?: number
@@ -253,6 +256,7 @@ export interface Database {
               name: string
               deadline: string
               course_code: string
+              completed: boolean
             }[]
           }
       createnewcourseandenroll: {
@@ -277,6 +281,7 @@ export interface Database {
           name: string
           deadline: string
           course_code: string
+          completed: boolean
         }[]
       }
       getassignmentsforcourse: {
@@ -288,6 +293,7 @@ export interface Database {
           name: string
           deadline: string
           course_code: string
+          completed: boolean
         }[]
       }
       getstudentcourses: {

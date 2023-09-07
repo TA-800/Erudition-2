@@ -30,11 +30,7 @@ export default function HamburgerMenu() {
 
     return (
         <>
-            <button
-                onClick={() => {
-                    if (!open) setOpen(true);
-                }}
-                className="btn bg-zinc-800">
+            <button onClick={() => setOpen(!open)} className="btn bg-zinc-800">
                 <svg
                     xmlns="http://www.w3.org/2000/svg"
                     fill="none"

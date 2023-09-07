@@ -17,13 +17,14 @@ export default function Assignment({
         minute: "numeric",
     });
     const relativeFormatter = new Intl.RelativeTimeFormat("en-US");
-
-    // "inline-flex justify-center"
+    const completedStyle = assignment.completed ? "opacity-25" : "";
 
     return (
         <>
-            <span className="col-span-1 lg:border-b border-white/5 inline-flex items-center">{assignment.course_code}</span>
-            <div className="lg:col-span-1 col-span-3 lg:border-b border-white/5 inline-flex items-center">
+            <span className={`col-span-1 lg:border-b border-white/5 inline-flex items-center ${completedStyle}`}>
+                {assignment.course_code}
+            </span>
+            <div className={`lg:col-span-1 col-span-3 lg:border-b border-white/5 inline-flex items-center ${completedStyle}`}>
                 <input
                     type="checkbox"
                     onChange={(e) => {
@@ -33,10 +34,12 @@ export default function Assignment({
                 />
                 <span className="break-all pl-1">{assignment.name}</span>
             </div>
-            <span className="lg:col-span-1 col-span-2 border-b border-white/5 lg:text-base text-xs opacity-75">
+            <span
+                className={`lg:col-span-1 col-span-2 border-b border-white/5 lg:text-base text-xs opacity-75 ${completedStyle}`}>
                 {timeFormatter.format(deadline)}
             </span>
-            <span className="lg:col-span-1 col-span-2 border-b border-white/5 lg:text-base text-xs opacity-75 inline-flex items-center justify-end">
+            <span
+                className={`lg:col-span-1 col-span-2 border-b border-white/5 lg:text-base text-xs opacity-75 inline-flex items-center justify-end ${completedStyle}`}>
                 {relativeFormatter.format(Math.floor((deadline.getTime() - Date.now()) / (1000 * 60 * 60 * 24)), "day")}
             </span>
         </>

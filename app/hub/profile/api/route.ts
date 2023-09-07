@@ -19,8 +19,6 @@ export async function POST (request: Request) {
           })
     }
     
-    console.log(data.user.id, year, ei_id);
-
     const { error: err } = await supabase
         .from("students")
         .upsert({id: data.user.id, Year: year, ei_id: ei_id})

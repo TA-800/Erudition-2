@@ -10,6 +10,7 @@ import AddModuleDialog from "./addModuleDialog";
 import DeleteModuleDialog from "./deleteModuleDialog";
 import Assignment from "./assignment";
 import AddAssignmentDialog from "./addAssignmentDialog";
+import CompleteAssignmentButton, { DeleteAssignmentButton } from "./assignmentCompDel";
 
 export type Course = Database["public"]["Tables"]["courses"]["Row"];
 export type Module = Database["public"]["Tables"]["modules"]["Row"];
@@ -176,6 +177,23 @@ export default function Content({ doesExistInStudentData, userId }: { doesExistI
         if (action === "add") setSelectedAssignments((prev) => [...prev, assignment]);
         else setSelectedAssignments((prev) => prev.filter((a) => a.id !== assignment.id));
     };
+
+    // Update all assignments completion status (STATE only)
+    const updateAllAssignmentsStateCompletionStatus = (toMark: boolean) => {
+        // In the assignments state, find the assignments that are selected and update their completion status
+        setAssignments((prev) =>
+            prev.map((assignment) => {
+                if (selectedAssignments.find((a) => a.id === assignment.id)) {
+                    return {
+                        ...assignment,
+                        completed: toMark,
+                    };
+                }
+                return assignment;
+            })
+        );
+    };
+
     useEffect(() => {
         fetchCoursesForStudent().finally(() => setLoadingCourses(false));
     }, []);
@@ -235,6 +253,12 @@ export default function Content({ doesExistInStudentData, userId }: { doesExistI
                                 courses={courses}
                                 addNewAssignmentToState={addNewAssignmentToState}
                             />
+                            <CompleteAssignmentButton
+                                allAssignments={assignments}
+                                selectedAssignments={selectedAssignments}
+                                updateAllAssignmentCompletionStatus={updateAllAssignmentsStateCompletionStatus}
+                            />
+                            <DeleteAssignmentButton />
                         </>
                     )}
                 </Toolbar>
@@ -276,9 +300,16 @@ export default function Content({ doesExistInStudentData, userId }: { doesExistI
                 )}
                 {/* Assignments */}
                 {content === "Assignments" && (
-                    <div className="grid grid-cols-4 border border-white/10 rounded p-1 lg:p-4">
+                    <AssignmentWrapper>
                         {assignments
-                            .sort((a, b) => new Date(a.deadline).getTime() - new Date(b.deadline).getTime())
+                            .sort((a, b) =>
+                                // First sort by completed, then by deadline
+                                a.completed === b.completed
+                                    ? 0
+                                    : a.completed
+                                    ? 1
+                                    : -1 || new Date(a.deadline).getTime() - new Date(b.deadline).getTime()
+                            )
                             .map((assignment) => (
                                 <Assignment
                                     key={assignment.id}
@@ -286,9 +317,13 @@ export default function Content({ doesExistInStudentData, userId }: { doesExistI
                                     updateSelectedAssignments={updateSelectedAssignments}
                                 />
                             ))}
-                    </div>
+                    </AssignmentWrapper>
                 )}
             </div>
         </div>
     );
+}
+
+export function AssignmentWrapper({ children }: { children: React.ReactNode }) {
+    return <div className="grid grid-cols-4 gap-1 border border-white/10 rounded p-1 lg:p-4">{children}</div>;
 }

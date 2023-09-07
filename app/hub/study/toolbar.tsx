@@ -20,7 +20,7 @@ export default function Toolbar({
     const { changeSearch, changeContent } = setters;
 
     return (
-        <div className="w-full flex flex-row flex-wrap lg:flex-nowrap gap-2 justify-between">
+        <div className="w-full flex flex-row flex-wrap lg:flex-nowrap gap-y-2 gap-x-px lg:gap-2 justify-between">
             {/* Input search bar */}
             <input
                 className="ipt"

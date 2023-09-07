@@ -25,7 +25,7 @@ export default function AddAssignmentDialog({
 
     return (
         <Dialog.Root open={dialogOpen} onOpenChange={setDialogOpen}>
-            <Dialog.Trigger className="btn lg:px-4 px-3">
+            <Dialog.Trigger className="btn lg:px-4 px-2">
                 <PlusIcon />
             </Dialog.Trigger>
             <Dialog.Portal>
