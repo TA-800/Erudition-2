@@ -9,6 +9,37 @@ export type Json =
 export interface Database {
   public: {
     Tables: {
+      assignments: {
+        Row: {
+          created_at: string
+          deadline: string
+          enroll_id: number
+          id: number
+          name: string
+        }
+        Insert: {
+          created_at?: string
+          deadline?: string
+          enroll_id: number
+          id?: number
+          name: string
+        }
+        Update: {
+          created_at?: string
+          deadline?: string
+          enroll_id?: number
+          id?: number
+          name?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "assignments_enroll_id_fkey"
+            columns: ["enroll_id"]
+            referencedRelation: "enrollment"
+            referencedColumns: ["id"]
+          }
+        ]
+      }
       courses: {
         Row: {
           code: string
@@ -190,6 +221,40 @@ export interface Database {
       [_ in never]: never
     }
     Functions: {
+      createassignment:
+        | {
+            Args: {
+              student_id_input: string
+              name_input: string
+              course_id_input: number
+              number_input: number
+              frequency: string
+              deadline_input: string
+            }
+            Returns: {
+              id: number
+              name: string
+              deadline: string
+              course_code: string
+            }[]
+          }
+        | {
+            Args: {
+              student_id_input: string
+              name_input: string
+              course_id_input: number
+              number_input: number
+              frequency: string
+              deadline_input: string
+              filter: string
+            }
+            Returns: {
+              id: number
+              name: string
+              deadline: string
+              course_code: string
+            }[]
+          }
       createnewcourseandenroll: {
         Args: {
           code_input: string
@@ -201,6 +266,28 @@ export interface Database {
           created_at: string
           id: number
           student_id: string
+        }[]
+      }
+      getallassignmentsforstudent: {
+        Args: {
+          student_id_input: string
+        }
+        Returns: {
+          id: number
+          name: string
+          deadline: string
+          course_code: string
+        }[]
+      }
+      getassignmentsforcourse: {
+        Args: {
+          enroll_id_input: number
+        }
+        Returns: {
+          id: number
+          name: string
+          deadline: string
+          course_code: string
         }[]
       }
       getstudentcourses: {

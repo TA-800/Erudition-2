@@ -71,9 +71,9 @@ export default function AddModuleDialog({
                 <PlusIcon />
             </Dialog.Trigger>
             <Dialog.Portal>
-                {/* z-10 to make it appear above Editor sticky toolbar */}
-                <Dialog.Overlay className="fixed z-10 inset-0 bg-black/50" />
-                <Dialog.Content className="fixed z-10 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 rounded bg-white text-black/75 lg:p-6 p-4 lg:w-1/3 w-full">
+                {/* z-50 to make it appear above sticky navbar */}
+                <Dialog.Overlay className="fixed z-50 inset-0 bg-black/50" />
+                <Dialog.Content className="fixed z-50 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 rounded bg-white text-black/75 lg:p-6 p-4 lg:w-1/3 w-full">
                     <div className="flex flex-row justify-between items-center">
                         <Dialog.Title className="text-2xl font-bold text-black/100">
                             Add Module To {selectedCourse?.code}
