@@ -2,7 +2,7 @@
 
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import { Database } from "@/utils/database.types";
-import { Course, Module } from "./content";
+import { Course, Module } from "./overview";
 import { useState } from "react";
 
 import * as Dialog from "@radix-ui/react-dialog";

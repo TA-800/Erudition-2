@@ -2,7 +2,7 @@
 
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import { Database } from "@/utils/database.types";
-import { Module } from "./content";
+import { Module } from "./overview";
 import DeleteIcon from "@/utils/deleteIcon";
 
 export default function DeleteModuleDialog({

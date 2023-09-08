@@ -7,7 +7,7 @@ import Underline from "@tiptap/extension-underline";
 import TextAlign from "@tiptap/extension-text-align";
 import Superscript from "@tiptap/extension-superscript";
 import SubScript from "@tiptap/extension-subscript";
-import { Module } from "./content";
+import { Module } from "./overview";
 import { useEffect, useState } from "react";
 
 const content = "<h2>Hi, and welcome to Erudition!</h2><p>This is a WYSIWYG editor in which you can write your own notes!</p>";

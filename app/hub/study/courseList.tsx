@@ -1,6 +1,6 @@
 "use client";
 
-import { Course } from "./content";
+import { Course } from "./overview";
 import { useEffect, useState } from "react";
 
 import * as Dialog from "@radix-ui/react-dialog";
@@ -28,7 +28,7 @@ export default function CourseList({
     addCourseToState: (newCourse: Course) => void;
 }) {
     return (
-        <div className="bg-black/10 border border-white/10 rounded p-4 lg:w-48 w-full flex flex-col gap-4">
+        <CourseListWrapper>
             <p className="text-3xl tracking-wide font-black text-center">COURSES</p>
             {/* Skeleton loader */}
             {loading && Array.from({ length: 2 }).map((_, i) => <div key={i} className="btn animate-pulse"></div>)}
@@ -51,7 +51,7 @@ export default function CourseList({
                     </div>
                 </div>
             )}
-        </div>
+        </CourseListWrapper>
     );
 }
 
@@ -267,4 +267,8 @@ function AddCourseDialog({
             </Dialog.Portal>
         </Dialog.Root>
     );
+}
+
+export function CourseListWrapper({ children }: { children: React.ReactNode }) {
+    return <div className="bg-black/10 border border-white/10 rounded p-4 lg:w-48 w-full flex flex-col gap-4">{children}</div>;
 }

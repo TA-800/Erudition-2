@@ -2,7 +2,7 @@
 
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import { Database } from "@/utils/database.types";
-import { AssignmentProps, Course } from "./content";
+import { AssignmentProps, Course } from "./overview";
 import { useState } from "react";
 
 import * as Dialog from "@radix-ui/react-dialog";
@@ -15,13 +15,39 @@ export default function AddAssignmentDialog({
 }: {
     userId: string;
     courses: Course[];
-    addNewAssignmentToState: (newAssignment: AssignmentProps) => void;
+    addNewAssignmentToState: (newAssignment: AssignmentProps[]) => void;
 }) {
     const supabase = createClientComponentClient<Database>();
     const [submitting, setSubmitting] = useState(false);
     const [dialogOpen, setDialogOpen] = useState(false);
 
-    const handleNewAssignmentSubmit = async (e: React.FormEvent<HTMLFormElement>) => {}; // TODO: Implement
+    const handleNewAssignmentSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+        // Get form data
+        e.preventDefault();
+        setSubmitting(true);
+
+        const formData = Object.fromEntries(new FormData(e.currentTarget).entries());
+
+        const { data, error } = await supabase.rpc("createassignment", {
+            name_input: String(formData.name),
+            course_id_input: Number(formData.course),
+            deadline_input: String(formData.deadline),
+            frequency: String(formData.frequency),
+            number_input: Number(formData.number),
+            filter: "course",
+            student_id_input: userId,
+        });
+
+        if (error) {
+            alert("Error creating assignment." + error?.message ?? "");
+            return;
+        }
+
+        // Add new assignment to assignments state
+        addNewAssignmentToState(data as AssignmentProps[]);
+        setSubmitting(false);
+        setDialogOpen(false);
+    };
 
     return (
         <Dialog.Root open={dialogOpen} onOpenChange={setDialogOpen}>
@@ -76,6 +102,7 @@ export default function AddAssignmentDialog({
                             <fieldset className="flex flex-col">
                                 <label htmlFor="frequency">Frequency</label>
                                 <select className="slct bg-zinc-200" name="frequency" id="frequency">
+                                    <option value="once">Once</option>
                                     <option value="daily">Daily</option>
                                     <option value="weekly">Weekly</option>
                                     <option value="monthly">Monthly</option>

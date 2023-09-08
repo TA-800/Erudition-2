@@ -4,7 +4,7 @@ import CheckIcon from "@/utils/checkIcon";
 import { Database } from "@/utils/database.types";
 import DeleteIcon from "@/utils/deleteIcon";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
-import { AssignmentProps } from "./content";
+import { AssignmentProps } from "./overview";
 
 const supabase = createClientComponentClient<Database>();
 

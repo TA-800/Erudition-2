@@ -1,15 +1,22 @@
 import { createServerComponentClient } from "@supabase/auth-helpers-nextjs";
 import { cookies } from "next/headers";
 import { Database } from "@/utils/database.types";
-import Content from "./content";
+import Content from "./overview";
+import WeeklyContent from "./weekly";
 
 // Server Component with three interactive (client) components: Notes/Modules, Assignments, Break
 export default async function Study() {
     const supabase = createServerComponentClient<Database>({ cookies });
     const { data } = await supabase.auth.getUser();
+    let doesExistInStudentData = false;
 
     const { data: students, error } = await supabase.from("students").select("*").eq("id", data.user!.id);
-    if (error) console.log("%cError: " + error, "color: red");
+    if (error) {
+        alert("Error fetching student data. Please try again later.\n" + error.message);
+        return <div>Error fetching student data.</div>;
+    } else {
+        doesExistInStudentData = students?.at(0)?.id === data.user!.id;
+    }
 
     return (
         <div className="center-pad flex flex-col gap-10">
@@ -26,7 +33,8 @@ export default async function Study() {
             </div>
 
             {/* Pass in userId to avoid calling supabase.auth.getUser() everytime in each comp. Context is overkill. */}
-            <Content doesExistInStudentData={students?.at(0)?.id === data.user!.id} userId={data.user!.id} />
+            <Content doesExistInStudentData={doesExistInStudentData} userId={data.user!.id} />
+            {doesExistInStudentData && <WeeklyContent userId={data.user!.id} />}
         </div>
     );
 }

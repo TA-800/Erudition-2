@@ -170,7 +170,9 @@ export default function Content({ doesExistInStudentData, userId }: { doesExistI
     };
 
     // Add new assignment to assignments list state (!= selectedAssignments)
-    const addNewAssignmentToState = (newAssignment: AssignmentProps) => {};
+    const addNewAssignmentToState = (newAssignment: AssignmentProps[]) => {
+        setAssignments((prev) => [...prev, ...newAssignment]);
+    };
 
     // update selectedAssignments list state with params: assignment and "add" | "remove"
     const updateSelectedAssignments = (assignment: AssignmentProps, action: "add" | "remove") => {
@@ -226,7 +228,7 @@ export default function Content({ doesExistInStudentData, userId }: { doesExistI
     }
 
     return (
-        <div className="w-full h-fit flex lg:flex-row flex-col gap-4">
+        <SectionWrapper>
             {/* Left side (courses) */}
             <CourseList
                 courses={courses}
@@ -239,9 +241,9 @@ export default function Content({ doesExistInStudentData, userId }: { doesExistI
             />
 
             {/* Right side (content) */}
-            <div className="bg-black/10 rounded border border-white/10 p-4 flex flex-col w-full gap-2">
+            <ContentPanelWrapper>
                 {/* Toolbar (top) */}
-                <Toolbar states={{ search, content }} setters={{ changeSearch, changeContent }}>
+                <Toolbar type="all" states={{ search, content }} setters={{ changeSearch, changeContent }}>
                     {content === "Modules" ? (
                         <>
                             <AddModuleDialog
@@ -308,30 +310,42 @@ export default function Content({ doesExistInStudentData, userId }: { doesExistI
                 {/* Assignments */}
                 {content === "Assignments" && (
                     <AssignmentWrapper>
-                        {assignments
-                            .sort((a, b) =>
-                                // Incomplete assignments first, then completed assignments
-                                // Then sort by deadline
-                                a.completed === b.completed
-                                    ? new Date(a.deadline).getTime() - new Date(b.deadline).getTime()
-                                    : a.completed
-                                    ? 1
-                                    : -1
-                            )
-                            .map((assignment) => (
-                                <Assignment
-                                    key={assignment.id}
-                                    assignment={assignment}
-                                    updateSelectedAssignments={updateSelectedAssignments}
-                                />
-                            ))}
+                        {loadingAssignments && <p className="col-span-4">Loading assignments...</p>}
+                        {/* If we have no assignments */}
+                        {!loadingAssignments && assignments.length === 0 && <p className="col-span-4">No assignments.</p>}
+                        {!loadingAssignments &&
+                            assignments
+                                .sort((a, b) =>
+                                    // Incomplete assignments first, then completed assignments
+                                    // Then sort by deadline
+                                    a.completed === b.completed
+                                        ? new Date(a.deadline).getTime() - new Date(b.deadline).getTime()
+                                        : a.completed
+                                        ? 1
+                                        : -1
+                                )
+                                .map((assignment) => (
+                                    <Assignment
+                                        key={assignment.id}
+                                        assignment={assignment}
+                                        updateSelectedAssignments={updateSelectedAssignments}
+                                    />
+                                ))}
                     </AssignmentWrapper>
                 )}
-            </div>
-        </div>
+            </ContentPanelWrapper>
+        </SectionWrapper>
     );
 }
 
 export function AssignmentWrapper({ children }: { children: React.ReactNode }) {
     return <div className="grid grid-cols-4 gap-1 border border-white/10 rounded p-1 lg:p-4">{children}</div>;
+}
+
+export function SectionWrapper({ children }: { children: React.ReactNode }) {
+    return <div className="w-full h-fit flex lg:flex-row flex-col gap-4">{children}</div>;
+}
+
+export function ContentPanelWrapper({ children }: { children: React.ReactNode }) {
+    return <div className="bg-black/10 rounded border border-white/10 p-4 flex flex-col w-full gap-2">{children}</div>;
 }

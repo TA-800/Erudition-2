@@ -1,4 +1,4 @@
-import { AssignmentProps } from "./content";
+import { AssignmentProps } from "./overview";
 
 export default function Assignment({
     assignment,
