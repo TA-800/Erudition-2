@@ -308,6 +308,13 @@ export interface Database {
           created_at: string
         }[]
       }
+      updateassignmentscompletionstatus: {
+        Args: {
+          id_array: number[]
+          tomark: boolean
+        }
+        Returns: string
+      }
     }
     Enums: {
       [_ in never]: never

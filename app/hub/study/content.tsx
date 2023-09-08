@@ -194,6 +194,11 @@ export default function Content({ doesExistInStudentData, userId }: { doesExistI
         );
     };
 
+    // Remove deleted assignments from assignments state
+    const removeDeletedAssignmentsFromState = () => {
+        setAssignments((prev) => prev.filter((assignment) => !selectedAssignments.find((a) => a.id === assignment.id)));
+    };
+
     useEffect(() => {
         fetchCoursesForStudent().finally(() => setLoadingCourses(false));
     }, []);
@@ -254,11 +259,13 @@ export default function Content({ doesExistInStudentData, userId }: { doesExistI
                                 addNewAssignmentToState={addNewAssignmentToState}
                             />
                             <CompleteAssignmentButton
-                                allAssignments={assignments}
                                 selectedAssignments={selectedAssignments}
                                 updateAllAssignmentCompletionStatus={updateAllAssignmentsStateCompletionStatus}
                             />
-                            <DeleteAssignmentButton />
+                            <DeleteAssignmentButton
+                                removeDeletedAssignmentsFromState={removeDeletedAssignmentsFromState}
+                                selectedAssignments={selectedAssignments}
+                            />
                         </>
                     )}
                 </Toolbar>
@@ -303,12 +310,13 @@ export default function Content({ doesExistInStudentData, userId }: { doesExistI
                     <AssignmentWrapper>
                         {assignments
                             .sort((a, b) =>
-                                // First sort by completed, then by deadline
+                                // Incomplete assignments first, then completed assignments
+                                // Then sort by deadline
                                 a.completed === b.completed
-                                    ? 0
+                                    ? new Date(a.deadline).getTime() - new Date(b.deadline).getTime()
                                     : a.completed
                                     ? 1
-                                    : -1 || new Date(a.deadline).getTime() - new Date(b.deadline).getTime()
+                                    : -1
                             )
                             .map((assignment) => (
                                 <Assignment
