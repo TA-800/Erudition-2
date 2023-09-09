@@ -21,6 +21,10 @@
         @apply bg-opacity-0 text-opacity-25;
     }
 
+    .btn-active {
+        @apply bg-zinc-600 font-bold text-white border-2;
+    }
+
     .editor-btn {
         @apply h-6 p-1 bg-zinc-600 hover:bg-zinc-500 text-zinc-300 flex justify-center items-center;
     }

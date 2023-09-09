@@ -38,7 +38,7 @@ export default function CourseList({
                     <button
                         onClick={() => changeSelected(course)}
                         key={course.id}
-                        className={`btn ${selected?.id === course.id ? "font-black text-xl border-2 border-white/20" : ""}`}>
+                        className={`btn ${selected?.id === course.id ? "btn-active" : ""}`}>
                         <span>{course.code}</span>
                     </button>
                 ))}
