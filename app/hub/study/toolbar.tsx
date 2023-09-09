@@ -15,8 +15,8 @@ type ToolbarProps =
       }
     | {
           type: "assignments";
-          states: never;
-          setters: never;
+          states?: never;
+          setters?: never;
           children: React.ReactNode;
       };
 

@@ -21,12 +21,25 @@ export default function WeeklyContent({ userId }: { userId: string }) {
     const [selectedAssignments, setSelectedAssignments] = useState<AssignmentProps[]>([]);
     const [loadingAssignments, setLoadingAssignments] = useState(false); // Loading state for Assignments
     // Filters
-    // const [week, setWeek] = useState<"this" | "next" | "choose">("this");
-    // const [date, setDate] = useState(startOfWeek(new Date(), { weekStartsOn: 1 }));
+    const [week, setWeek] = useState<"this" | "next" | "custom">("this");
+    const [date, setDate] = useState(startOfWeek(new Date(), { weekStartsOn: 1 }));
 
-    // const dateSetter = (date: Date) => {
-    //     setDate(startOfWeek(date, { weekStartsOn: 1 }));
-    // };
+    const dateSetter = (weekToSet: "this" | "next") => {
+        switch (weekToSet) {
+            case "this":
+                setWeek("this");
+                setDate(startOfWeek(new Date(), { weekStartsOn: 1 }));
+                break;
+            case "next":
+                // Next week
+                let nextWeek = new Date();
+                nextWeek.setDate(nextWeek.getDate() + 7);
+                setWeek("next");
+                setDate(startOfWeek(nextWeek, { weekStartsOn: 1 }));
+                break;
+            // case "custom": handled by input
+        }
+    };
 
     // Fetch courses for student
     const fetchCoursesForStudent = async () => {
@@ -97,9 +110,25 @@ export default function WeeklyContent({ userId }: { userId: string }) {
             <CourseListWrapper>
                 <p className="text-3xl tracking-wide font-black text-center">BY WEEK</p>
                 {/* Three options: This week, next week, choose week */}
-                <button className="btn">Present</button>
-                <button className="btn">Next</button>
-                <button className="btn">Choose</button>
+                <button
+                    className={`btn ${week === "this" ? "font-black text-xl border-2 border-white/20" : ""}`}
+                    onClick={() => dateSetter("this")}>
+                    This Week
+                </button>
+                <button
+                    className={`btn ${week === "next" ? "font-black text-xl border-2 border-white/20" : ""}`}
+                    onClick={() => dateSetter("next")}>
+                    Next Week
+                </button>
+                <div>
+                    <input
+                        type="date"
+                        onClick={() => setWeek("custom")}
+                        className={`btn w-full ${week === "custom" ? "border-2 border-white/20" : ""}`}
+                        onChange={(e) => setDate(new Date(e.target.value))}
+                    />
+                    <p className="text-sm opacity-75 lg:text-center text-right">Choose a custom week</p>
+                </div>
             </CourseListWrapper>
             <ContentPanelWrapper>
                 <Toolbar type="assignments">
@@ -120,10 +149,17 @@ export default function WeeklyContent({ userId }: { userId: string }) {
                     {/* If we have assignments */}
                     {!loadingAssignments &&
                         assignments
-                            // .filter(
-                            //     // Only those assignments whose deadline is in or after date state
-                            //     (assignment) => new Date(assignment.deadline).getTime() >= date.getTime()
-                            // )
+                            .filter(
+                                // Only those assignments after selected date and before end of week
+                                (assignment) => {
+                                    let assignmentDate = new Date(assignment.deadline);
+                                    let startDate = new Date(date);
+                                    let endDate = new Date(startDate);
+                                    endDate.setDate(endDate.getDate() + 7);
+
+                                    return assignmentDate >= startDate && assignmentDate < endDate;
+                                }
+                            )
                             .sort((a, b) =>
                                 // Incomplete assignments first, then completed assignments
                                 // Then sort by deadline
