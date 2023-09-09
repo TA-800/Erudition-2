@@ -180,29 +180,36 @@ export default function Content({ doesExistInStudentData, userId }: { doesExistI
         else setSelectedAssignments((prev) => prev.filter((a) => a.id !== assignment.id));
     };
 
-    // Update all assignments completion status (STATE only)
-    const updateAllAssignmentsStateCompletionStatus = (toMark: boolean) => {
-        // In the assignments state, find the assignments that are selected and update their completion status
-        setAssignments((prev) =>
-            prev.map((assignment) => {
-                if (selectedAssignments.find((a) => a.id === assignment.id)) {
-                    return {
-                        ...assignment,
-                        completed: toMark,
-                    };
-                }
-                return assignment;
-            })
-        );
-    };
-
-    // Remove deleted assignments from assignments state
-    const removeDeletedAssignmentsFromState = () => {
-        setAssignments((prev) => prev.filter((assignment) => !selectedAssignments.find((a) => a.id === assignment.id)));
-    };
-
     useEffect(() => {
         fetchCoursesForStudent().finally(() => setLoadingCourses(false));
+
+        // Set up listener for new assignments
+        console.log("Setting up listener for new assignments in overview.tsx");
+        const assigmentsTableListener = supabase
+            .channel("assignments_table_changes_overview")
+            .on(
+                "postgres_changes",
+                {
+                    event: "*",
+                    schema: "public",
+                    table: "assignments",
+                },
+                (payload) => {
+                    console.log("Heard changes from overview.tsx");
+                    console.log(payload);
+
+                    if (content === "Assignments" && selectedCourse) {
+                        setSelectedAssignments([]);
+                        setLoadingAssignments(true);
+                        fetchAssignmentsForCourse(selectedCourse!.id).then(() => setLoadingAssignments(false));
+                    }
+                }
+            )
+            .subscribe();
+
+        return () => {
+            assigmentsTableListener.unsubscribe();
+        };
     }, []);
 
     useEffect(() => {
@@ -255,19 +262,9 @@ export default function Content({ doesExistInStudentData, userId }: { doesExistI
                         </>
                     ) : (
                         <>
-                            <AddAssignmentDialog
-                                userId={userId}
-                                courses={courses}
-                                addNewAssignmentToState={addNewAssignmentToState}
-                            />
-                            <CompleteAssignmentButton
-                                selectedAssignments={selectedAssignments}
-                                updateAllAssignmentCompletionStatus={updateAllAssignmentsStateCompletionStatus}
-                            />
-                            <DeleteAssignmentButton
-                                removeDeletedAssignmentsFromState={removeDeletedAssignmentsFromState}
-                                selectedAssignments={selectedAssignments}
-                            />
+                            <AddAssignmentDialog userId={userId} courses={courses} />
+                            <CompleteAssignmentButton selectedAssignments={selectedAssignments} />
+                            <DeleteAssignmentButton selectedAssignments={selectedAssignments} />
                         </>
                     )}
                 </Toolbar>

@@ -8,13 +8,7 @@ import { AssignmentProps } from "./overview";
 
 const supabase = createClientComponentClient<Database>();
 
-export default function CompleteAssignmentButton({
-    selectedAssignments,
-    updateAllAssignmentCompletionStatus,
-}: {
-    updateAllAssignmentCompletionStatus: (toMark: boolean) => void;
-    selectedAssignments: AssignmentProps[];
-}) {
+export default function CompleteAssignmentButton({ selectedAssignments }: { selectedAssignments: AssignmentProps[] }) {
     const updateCompletionStatusOfSelectedAssignments = async () => {
         if (!selectedAssignments.length) return;
 
@@ -29,8 +23,6 @@ export default function CompleteAssignmentButton({
             alert("Error updating assignments" + error?.message ?? "");
             return;
         }
-        // Update allAssignments state
-        updateAllAssignmentCompletionStatus(toMark);
     };
 
     return (
@@ -43,13 +35,7 @@ export default function CompleteAssignmentButton({
     );
 }
 
-export function DeleteAssignmentButton({
-    selectedAssignments,
-    removeDeletedAssignmentsFromState,
-}: {
-    selectedAssignments: AssignmentProps[];
-    removeDeletedAssignmentsFromState: () => void;
-}) {
+export function DeleteAssignmentButton({ selectedAssignments }: { selectedAssignments: AssignmentProps[] }) {
     const deleteSelectedAssignments = async () => {
         if (!selectedAssignments.length) return;
 
@@ -65,9 +51,6 @@ export function DeleteAssignmentButton({
             alert("Error deleting assignments" + error.message);
             return;
         }
-
-        // Remove deleted assignments from allAssignments state
-        removeDeletedAssignmentsFromState();
     };
     return (
         <button

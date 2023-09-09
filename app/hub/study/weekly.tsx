@@ -76,32 +76,37 @@ export default function WeeklyContent({ userId }: { userId: string }) {
         else setSelectedAssignments((prev) => prev.filter((a) => a.id !== assignment.id));
     };
 
-    // Update all assignments completion status (STATE only)
-    const updateAllAssignmentsStateCompletionStatus = (toMark: boolean) => {
-        // In the assignments state, find the assignments that are selected and update their completion status
-        setAssignments((prev) =>
-            prev.map((assignment) => {
-                if (selectedAssignments.find((a) => a.id === assignment.id)) {
-                    return {
-                        ...assignment,
-                        completed: toMark,
-                    };
-                }
-                return assignment;
-            })
-        );
-    };
-
-    // Remove deleted assignments from assignments state
-    const removeDeletedAssignmentsFromState = () => {
-        setAssignments((prev) => prev.filter((assignment) => !selectedAssignments.find((a) => a.id === assignment.id)));
-    };
-
     useEffect(() => {
         setLoadingAssignments(true);
         fetchCoursesForStudent()
             .then(() => fetchAllAssignmentsForStudent())
             .then(() => setLoadingAssignments(false));
+
+        // Set up listener for new assignments
+        const assigmentsTableListener = supabase
+            .channel("assignments_table_changes_weekly")
+            .on(
+                "postgres_changes",
+                {
+                    event: "*",
+                    schema: "public",
+                    table: "assignments",
+                },
+                (payload) => {
+                    console.log("Heard changes from weekly.tsx");
+                    console.log(payload);
+
+                    // reset some states
+                    setSelectedAssignments([]);
+                    setLoadingAssignments(true);
+                    fetchAllAssignmentsForStudent().then(() => setLoadingAssignments(false));
+                }
+            )
+            .subscribe();
+
+        return () => {
+            assigmentsTableListener.unsubscribe();
+        };
     }, []);
 
     return (
@@ -132,15 +137,9 @@ export default function WeeklyContent({ userId }: { userId: string }) {
             </CourseListWrapper>
             <ContentPanelWrapper>
                 <Toolbar type="assignments">
-                    <AddAssignmentDialog userId={userId} courses={courses} addNewAssignmentToState={addNewAssignmentToState} />
-                    <CompleteAssignmentButton
-                        selectedAssignments={selectedAssignments}
-                        updateAllAssignmentCompletionStatus={updateAllAssignmentsStateCompletionStatus}
-                    />
-                    <DeleteAssignmentButton
-                        removeDeletedAssignmentsFromState={removeDeletedAssignmentsFromState}
-                        selectedAssignments={selectedAssignments}
-                    />
+                    <AddAssignmentDialog userId={userId} courses={courses} />
+                    <CompleteAssignmentButton selectedAssignments={selectedAssignments} />
+                    <DeleteAssignmentButton selectedAssignments={selectedAssignments} />
                 </Toolbar>
                 <AssignmentWrapper>
                     {loadingAssignments && <p className="col-span-4">Loading assignments...</p>}

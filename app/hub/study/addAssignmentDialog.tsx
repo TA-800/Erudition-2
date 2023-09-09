@@ -8,15 +8,7 @@ import { useState } from "react";
 import * as Dialog from "@radix-ui/react-dialog";
 import PlusIcon from "@/utils/plusIcon";
 
-export default function AddAssignmentDialog({
-    userId,
-    courses,
-    addNewAssignmentToState,
-}: {
-    userId: string;
-    courses: Course[];
-    addNewAssignmentToState: (newAssignment: AssignmentProps[]) => void;
-}) {
+export default function AddAssignmentDialog({ userId, courses }: { userId: string; courses: Course[] }) {
     const supabase = createClientComponentClient<Database>();
     const [submitting, setSubmitting] = useState(false);
     const [dialogOpen, setDialogOpen] = useState(false);
@@ -28,7 +20,7 @@ export default function AddAssignmentDialog({
 
         const formData = Object.fromEntries(new FormData(e.currentTarget).entries());
 
-        const { data, error } = await supabase.rpc("createassignment", {
+        const { error } = await supabase.rpc("createassignment", {
             name_input: String(formData.name),
             course_id_input: Number(formData.course),
             deadline_input: String(formData.deadline),
@@ -43,8 +35,6 @@ export default function AddAssignmentDialog({
             return;
         }
 
-        // Add new assignment to assignments state
-        addNewAssignmentToState(data as AssignmentProps[]);
         setSubmitting(false);
         setDialogOpen(false);
     };
