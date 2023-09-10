@@ -128,7 +128,7 @@ export default function WeeklyContent({ userId }: { userId: string }) {
                         className={`btn ${week === "custom" ? "btn-active" : ""} w-full lg:w-32`}
                         onChange={(e) => setDate(new Date(e.target.value))}
                     />
-                    <p className="text-sm opacity-75 lg:text-center text-right">Choose a custom week</p>
+                    <p className="text-sm opacity-75 lg:text-center text-right">Choose custom week</p>
                 </div>
             </CourseListWrapper>
             <ContentPanelWrapper>

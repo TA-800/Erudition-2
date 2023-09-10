@@ -4,10 +4,12 @@ import { CourseListWrapper } from "./courseList";
 import { SectionWrapper, ContentPanelWrapper } from "./overview";
 
 import { useState } from "react";
-import Trivia from "./trivia";
+import Trivia from "@/utils/games/trivia";
+import Hangman from "@/utils/games/hang";
+import Search from "@/utils/games/search";
 
 export default function Respite() {
-    const [game, setGame] = useState<"trivia" | "hangman" | "wordsearch">("trivia");
+    const [game, setGame] = useState<"trivia" | "hangman" | "search">("trivia");
 
     return (
         <SectionWrapper>
@@ -19,11 +21,15 @@ export default function Respite() {
                 <button className={`btn ${game === "hangman" ? "btn-active" : ""}`} onClick={() => setGame("hangman")}>
                     HANGMAN
                 </button>
-                <button className={`btn ${game === "wordsearch" ? "btn-active" : ""}`} onClick={() => setGame("wordsearch")}>
-                    WORDSEARCH
+                <button className={`btn ${game === "search" ? "btn-active" : ""}`} onClick={() => setGame("search")}>
+                    SEARCH
                 </button>
             </CourseListWrapper>
-            <ContentPanelWrapper>{game === "trivia" && <Trivia />}</ContentPanelWrapper>
+            <ContentPanelWrapper>
+                {game === "trivia" && <Trivia />}
+                {game === "hangman" && <Hangman />}
+                {game === "search" && <Search />}
+            </ContentPanelWrapper>
         </SectionWrapper>
     );
 }
