@@ -11,6 +11,7 @@ import DeleteModuleDialog from "./deleteModuleDialog";
 import Assignment from "./assignment";
 import AddAssignmentDialog from "./addAssignmentDialog";
 import CompleteAssignmentButton, { DeleteAssignmentButton } from "./assignmentCompDel";
+import { useDebounce } from "usehooks-ts";
 
 export type Course = Database["public"]["Tables"]["courses"]["Row"];
 export type Module = Database["public"]["Tables"]["modules"]["Row"];
@@ -33,6 +34,7 @@ export default function Content({ doesExistInStudentData, userId }: { doesExistI
     const [loadingAssignments, setLoadingAssignments] = useState(false); // Loading state for Assignments
     // Filters
     const [search, setSearch] = useState("");
+    const debouncedSearch = useDebounce(search, 500);
     const [content, setContent] = useState<"Modules" | "Assignments">("Modules");
     const changeContent = (value: "Modules" | "Assignments") => setContent(value);
     const changeSearch = (value: string) => setSearch(value);
@@ -169,22 +171,16 @@ export default function Content({ doesExistInStudentData, userId }: { doesExistI
         setAssignments(assignments as AssignmentProps[]);
     };
 
-    // Add new assignment to assignments list state (!= selectedAssignments)
-    const addNewAssignmentToState = (newAssignment: AssignmentProps[]) => {
-        setAssignments((prev) => [...prev, ...newAssignment]);
-    };
-
     // update selectedAssignments list state with params: assignment and "add" | "remove"
     const updateSelectedAssignments = (assignment: AssignmentProps, action: "add" | "remove") => {
         if (action === "add") setSelectedAssignments((prev) => [...prev, assignment]);
         else setSelectedAssignments((prev) => prev.filter((a) => a.id !== assignment.id));
     };
 
+    // Fetch courses + assignment listener
     useEffect(() => {
         fetchCoursesForStudent().finally(() => setLoadingCourses(false));
 
-        // Set up listener for new assignments
-        console.log("Setting up listener for new assignments in overview.tsx");
         const assigmentsTableListener = supabase
             .channel("assignments_table_changes_overview")
             .on(
@@ -195,9 +191,6 @@ export default function Content({ doesExistInStudentData, userId }: { doesExistI
                     table: "assignments",
                 },
                 (payload) => {
-                    console.log("Heard changes from overview.tsx");
-                    console.log(payload);
-
                     if (content === "Assignments" && selectedCourse) {
                         setSelectedAssignments([]);
                         setLoadingAssignments(true);
@@ -212,6 +205,7 @@ export default function Content({ doesExistInStudentData, userId }: { doesExistI
         };
     }, []);
 
+    // Fetch modules / assignments for course
     useEffect(() => {
         if (!selectedCourse) return;
         if (content === "Modules") {
@@ -283,6 +277,7 @@ export default function Content({ doesExistInStudentData, userId }: { doesExistI
                                     .sort(
                                         (a, b) => new Date(a.created_at).getTime() - new Date(b.created_at).getTime() // Sort by created_at
                                     )
+                                    .filter((module) => module.notes.toLowerCase().includes(debouncedSearch.toLowerCase())) // Filter by search
                                     .map((module, i) => (
                                         <div
                                             key={module.id}
@@ -321,6 +316,7 @@ export default function Content({ doesExistInStudentData, userId }: { doesExistI
                                         ? 1
                                         : -1
                                 )
+                                .filter((assignment) => assignment.name.toLowerCase().includes(debouncedSearch.toLowerCase())) // Filter by search
                                 .map((assignment) => (
                                     <Assignment
                                         key={assignment.id}

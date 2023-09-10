@@ -3,7 +3,7 @@
 export default function Search() {
     return (
         <div>
-            <p>Hangman</p>
+            <p>Search</p>
         </div>
     );
 }

@@ -65,11 +65,6 @@ export default function WeeklyContent({ userId }: { userId: string }) {
         setAssignments(assignments as AssignmentProps[]);
     };
 
-    // Add new assignment to assignments list state (!= selectedAssignments)
-    const addNewAssignmentToState = (newAssignment: AssignmentProps[]) => {
-        setAssignments((prev) => [...prev, ...newAssignment]);
-    };
-
     // update selectedAssignments list state with params: assignment and "add" | "remove"
     const updateSelectedAssignments = (assignment: AssignmentProps, action: "add" | "remove") => {
         if (action === "add") setSelectedAssignments((prev) => [...prev, assignment]);
@@ -93,9 +88,6 @@ export default function WeeklyContent({ userId }: { userId: string }) {
                     table: "assignments",
                 },
                 (payload) => {
-                    console.log("Heard changes from weekly.tsx");
-                    console.log(payload);
-
                     // reset some states
                     setSelectedAssignments([]);
                     setLoadingAssignments(true);

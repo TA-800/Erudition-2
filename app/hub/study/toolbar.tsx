@@ -21,7 +21,6 @@ type ToolbarProps =
       };
 
 export default function Toolbar({ type, states, setters, children }: ToolbarProps) {
-    // destructuring
     return (
         <div className="w-full flex flex-row flex-wrap lg:flex-nowrap gap-y-2 gap-x-px lg:gap-2 justify-between">
             {type === "all" && (
