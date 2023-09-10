@@ -32,19 +32,24 @@ export default function Trivia() {
     const fetchQuestions = async () => {
         fetch(`https://opentdb.com/api.php?amount=4&difficulty=easy&token=${sessionToken}`)
             .then((res) => res.json())
-            .then((data) => setQuestions(data.results as Question[]));
+            .then((data) => {
+                if (data.response_code === 4) fetchSSNToken().then(() => fetchQuestions());
+                else setQuestions(data.results);
+            });
+    };
+
+    const fetchSSNToken = async () => {
+        fetch("https://opentdb.com/api_token.php?command=request")
+            .then((res) => res.json())
+            .then((data) => setSessionToken(data.token));
     };
 
     useEffect(() => {
         // If session token is not set, get one
-        if (!sessionToken) {
-            fetch("https://opentdb.com/api_token.php?command=request")
-                .then((res) => res.json())
-                .then((data) => setSessionToken(data.token));
-        }
-
-        // If session token is set, get questions
-        if (sessionToken) fetchQuestions();
+        if (!sessionToken) fetchSSNToken();
+        if (sessionToken)
+            // If session token is set, get questions
+            fetchQuestions();
     }, [sessionToken]);
 
     return (
@@ -81,7 +86,7 @@ function Question({ question }: { question: Question }) {
     return (
         <div className="flex flex-col gap-1 items-center" key={question.question}>
             <p>{htmlDecode(question.question)}</p>
-            <div className="flex flex-row flex-wrap justify-center lg:justify-around gap-3">
+            <div className="flex flex-row flex-wrap justify-center gap-3">
                 {shuffledAnswers.map((answer) => (
                     <AnsBtn answer={answer} key={answer} />
                 ))}

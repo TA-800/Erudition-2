@@ -4,9 +4,9 @@ import { CourseListWrapper } from "./courseList";
 import { SectionWrapper, ContentPanelWrapper } from "./overview";
 
 import { useState } from "react";
-import Trivia from "@/utils/games/trivia";
-import Hangman from "@/utils/games/hang";
-import Search from "@/utils/games/search";
+import Trivia from "./games/trivia";
+import Hangman from "./games/hang";
+import Search from "./games/search";
 
 export default function Respite() {
     const [game, setGame] = useState<"trivia" | "hangman" | "search">("trivia");
