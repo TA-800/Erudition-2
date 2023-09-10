@@ -15,9 +15,7 @@ export default async function Study() {
     if (error) {
         alert("Error fetching student data. Please try again later.\n" + error.message);
         return <div>Error fetching student data.</div>;
-    } else {
-        doesExistInStudentData = students?.at(0)?.id === data.user!.id;
-    }
+    } else doesExistInStudentData = students?.at(0)?.id === data.user!.id;
 
     return (
         <div className="center-pad flex flex-col gap-10">

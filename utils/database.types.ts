@@ -157,6 +157,37 @@ export interface Database {
           }
         ]
       }
+      posts: {
+        Row: {
+          created_at: string
+          description: string
+          ei_id: number
+          id: number
+          title: string
+        }
+        Insert: {
+          created_at?: string
+          description?: string
+          ei_id: number
+          id?: number
+          title: string
+        }
+        Update: {
+          created_at?: string
+          description?: string
+          ei_id?: number
+          id?: number
+          title?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "posts_ei_id_fkey"
+            columns: ["ei_id"]
+            referencedRelation: "educational_institutions"
+            referencedColumns: ["id"]
+          }
+        ]
+      }
       profiles: {
         Row: {
           avatar_url: string | null
