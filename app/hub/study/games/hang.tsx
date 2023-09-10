@@ -5,28 +5,35 @@ import { useState } from "react";
 export default function Hangman() {
     const [word, setWord] = useState(generate(1).at(0));
     const [chances, setChances] = useState(6);
-    const [revealed, setRevealed] = useState<string[]>([]);
-    const [lettersGuessed, setLettersGuessed] = useState<string[]>([]);
+    const [lettersGuessed, setLettersGuessed] = useState<string[]>(
+        // choose one random letter from the word to start with
+        [word!.at(Math.floor(Math.random() * word!.length))!]
+    );
     const [gameOver, setGameOver] = useState(false);
 
     const reset = () => {
-        setWord(generate(1).at(0));
+        const newWord = generate(1).at(0);
+        const hint = newWord!.at(Math.floor(Math.random() * newWord!.length));
+        setWord(newWord);
         setChances(6);
-        setRevealed([]);
-        setLettersGuessed([]);
+        setLettersGuessed([hint!]);
         setGameOver(false);
     };
 
     const handleLetterClick = (letter: string) => {
-        if (word!.includes(letter)) {
-            setRevealed([...revealed, letter]);
-        } else {
-            setChances(chances - 1);
+        let newLettersGuessed = [...lettersGuessed, letter];
+
+        setLettersGuessed(newLettersGuessed);
+
+        // If the letter guessed was wrong
+        if (!word!.includes(letter)) {
+            let newChances = chances - 1;
+            setChances(newChances);
+            if (newChances === 0) setGameOver(true);
         }
 
-        setLettersGuessed([...lettersGuessed, letter]);
-
-        if (chances === 1) setGameOver(true);
+        // If the letter guessed was right and the word is complete
+        if (word!.split("").every((ltr) => newLettersGuessed.includes(ltr))) setGameOver(true);
     };
 
     return (
@@ -36,7 +43,7 @@ export default function Hangman() {
                     {word!.split("").map((letter, index) => {
                         return (
                             <span className="text-3xl font-black" key={index}>
-                                {gameOver ? letter : revealed.includes(letter) ? letter : "_"}
+                                {gameOver ? letter : lettersGuessed.includes(letter) ? letter : "_"}
                             </span>
                         );
                     })}
