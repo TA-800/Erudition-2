@@ -3,6 +3,7 @@ import { cookies } from "next/headers";
 import { Database } from "@/utils/database.types";
 import Content from "./overview";
 import WeeklyContent from "./weekly";
+import Respite from "./break";
 
 // Server Component with three interactive (client) components: Notes/Modules, Assignments, Break
 export default async function Study() {
@@ -35,6 +36,7 @@ export default async function Study() {
             {/* Pass in userId to avoid calling supabase.auth.getUser() everytime in each comp. Context is overkill. */}
             <Content doesExistInStudentData={doesExistInStudentData} userId={data.user!.id} />
             {doesExistInStudentData && <WeeklyContent userId={data.user!.id} />}
+            <Respite />
         </div>
     );
 }

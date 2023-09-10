@@ -21,6 +21,14 @@
         @apply bg-opacity-0 text-opacity-25;
     }
 
+    .ans-btn {
+        @apply bg-zinc-700 text-zinc-300 py-2 px-4 rounded border border-white/10 h-12 flex flex-row gap-1 justify-center items-center;
+    }
+
+    .ans-btn[disabled] {
+        @apply text-opacity-75;
+    }
+
     .btn-active {
         @apply bg-zinc-600 font-bold text-white border-2;
     }
