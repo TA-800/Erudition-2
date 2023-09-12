@@ -43,6 +43,43 @@ export interface Database {
           }
         ]
       }
+      comments: {
+        Row: {
+          comment: string
+          created_at: string
+          id: number
+          post_id: number
+          student_id: string
+        }
+        Insert: {
+          comment: string
+          created_at?: string
+          id?: number
+          post_id: number
+          student_id: string
+        }
+        Update: {
+          comment?: string
+          created_at?: string
+          id?: number
+          post_id?: number
+          student_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "comments_post_id_fkey"
+            columns: ["post_id"]
+            referencedRelation: "posts"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "comments_student_id_fkey"
+            columns: ["student_id"]
+            referencedRelation: "students"
+            referencedColumns: ["id"]
+          }
+        ]
+      }
       courses: {
         Row: {
           code: string
@@ -159,6 +196,7 @@ export interface Database {
       }
       posts: {
         Row: {
+          author: string
           created_at: string
           description: string
           ei_id: number
@@ -166,6 +204,7 @@ export interface Database {
           title: string
         }
         Insert: {
+          author: string
           created_at?: string
           description?: string
           ei_id: number
@@ -173,6 +212,7 @@ export interface Database {
           title: string
         }
         Update: {
+          author?: string
           created_at?: string
           description?: string
           ei_id?: number
@@ -180,6 +220,12 @@ export interface Database {
           title?: string
         }
         Relationships: [
+          {
+            foreignKeyName: "posts_author_fkey"
+            columns: ["author"]
+            referencedRelation: "students"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "posts_ei_id_fkey"
             columns: ["ei_id"]
@@ -325,6 +371,19 @@ export interface Database {
           deadline: string
           course_code: string
           completed: boolean
+        }[]
+      }
+      getpostswithcommentnumber: {
+        Args: {
+          ei_id_input?: number
+          post_id_input?: number
+        }
+        Returns: {
+          id: number
+          title: string
+          description: string
+          created_at: string
+          comment_count: number
         }[]
       }
       getstudentcourses: {
