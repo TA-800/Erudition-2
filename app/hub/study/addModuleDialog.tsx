@@ -67,7 +67,7 @@ export default function AddModuleDialog({
 
     return (
         <Dialog.Root open={dialogOpen} onOpenChange={setDialogOpen}>
-            <Dialog.Trigger disabled={selectedCourse === null} className="btn lg:px-4 px-3">
+            <Dialog.Trigger disabled={selectedCourse === null} className="btn btn-primary lg:px-4 px-3">
                 <PlusIcon />
             </Dialog.Trigger>
             <Dialog.Portal>

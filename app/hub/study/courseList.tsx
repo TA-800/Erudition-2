@@ -200,7 +200,7 @@ function AddCourseDialog({
 
     return (
         <Dialog.Root open={dialogOpen} onOpenChange={setDialogOpen}>
-            <Dialog.Trigger className="btn">
+            <Dialog.Trigger className="btn btn-primary">
                 <PlusIcon />
             </Dialog.Trigger>
             <Dialog.Portal>

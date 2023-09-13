@@ -1,7 +1,6 @@
 import { Database } from "@/utils/database.types";
 import { createServerComponentClient } from "@supabase/auth-helpers-nextjs";
 import { cookies } from "next/headers";
-import Link from "next/link";
 import CreatePostButton from "./newPost";
 import PostWrapper from "./post";
 

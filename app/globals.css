@@ -21,8 +21,12 @@
         @apply bg-zinc-600 font-bold text-white border-2;
     }
 
+    .btn-primary {
+        @apply bg-green-800 text-green-300;
+    }
+
     .btn[disabled] {
-        @apply bg-opacity-0 text-opacity-25;
+        @apply bg-opacity-10 text-opacity-25;
     }
 
     .ans-btn {
@@ -75,4 +79,12 @@ ol {
 
 ul {
     list-style-type: disc;
+}
+
+a {
+    text-decoration: none;
+    font-weight: 700;
+}
+a:hover {
+    border-bottom: 1px solid;
 }

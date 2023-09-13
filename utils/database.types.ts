@@ -373,6 +373,18 @@ export interface Database {
           completed: boolean
         }[]
       }
+      getcommentswithextrainfo: {
+        Args: {
+          post_id_input: number
+        }
+        Returns: {
+          id: number
+          author: string
+          avatar_url: string
+          comment: string
+          created_at: string
+        }[]
+      }
       getpostswithcommentnumber: {
         Args: {
           ei_id_input?: number

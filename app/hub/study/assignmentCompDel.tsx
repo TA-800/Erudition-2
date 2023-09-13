@@ -29,7 +29,7 @@ export default function CompleteAssignmentButton({ selectedAssignments }: { sele
         <button
             disabled={selectedAssignments.length < 1}
             onClick={updateCompletionStatusOfSelectedAssignments}
-            className="btn bg-green-800 lg:px-4 px-2">
+            className="btn lg:px-4 px-2">
             <CheckIcon />
         </button>
     );

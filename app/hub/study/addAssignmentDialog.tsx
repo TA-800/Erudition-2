@@ -41,7 +41,7 @@ export default function AddAssignmentDialog({ userId, courses }: { userId: strin
 
     return (
         <Dialog.Root open={dialogOpen} onOpenChange={setDialogOpen}>
-            <Dialog.Trigger className="btn lg:px-4 px-2">
+            <Dialog.Trigger className="btn btn-primary lg:px-4 px-2">
                 <PlusIcon />
             </Dialog.Trigger>
             <Dialog.Portal>

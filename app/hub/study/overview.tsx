@@ -12,6 +12,7 @@ import Assignment from "./assignment";
 import AddAssignmentDialog from "./addAssignmentDialog";
 import CompleteAssignmentButton, { DeleteAssignmentButton } from "./assignmentCompDel";
 import { useDebounce } from "usehooks-ts";
+import { useRouter } from "next/navigation";
 
 export type Course = Database["public"]["Tables"]["courses"]["Row"];
 export type Module = Database["public"]["Tables"]["modules"]["Row"];
@@ -38,6 +39,8 @@ export default function Content({ doesExistInStudentData, userId }: { doesExistI
     const [content, setContent] = useState<"Modules" | "Assignments">("Modules");
     const changeContent = (value: "Modules" | "Assignments") => setContent(value);
     const changeSearch = (value: string) => setSearch(value);
+    // Router
+    const router = useRouter();
 
     // Fetch courses for student
     const fetchCoursesForStudent = async () => {

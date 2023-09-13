@@ -1,12 +1,14 @@
 import Link from "next/link";
 import { Post } from "./page";
 
-export default function PostWrapper({ post }: { post: Post }) {
+export default function PostWrapper({ post, isInPage = false }: { post: Post; isInPage?: boolean }) {
     return (
         <div className="bg-zinc-700 rounded p-4">
-            <Link href={`/hub/discussions/${post.id}`} className="font-bold hover:underline">
-                {post.title}
-            </Link>
+            {isInPage ? (
+                <p className="font-bold">{post.title}</p>
+            ) : (
+                <Link href={`/hub/discussions/${post.id}`}>{post.title}</Link>
+            )}
             <div className="opacity-75">{post.description}</div>
             <div className="opacity-75 flex gap-1 items-center">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-5 h-5">

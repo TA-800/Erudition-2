@@ -3,12 +3,14 @@
 import { Database } from "@/utils/database.types";
 import PlusIcon from "@/utils/plusIcon";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 export default function CreatePostButton() {
     const supabase = createClientComponentClient<Database>();
     const [isCreating, setIsCreating] = useState(false);
     const [isSubmitting, setIsSubmitting] = useState(false);
+    const router = useRouter();
 
     const handleNewPostSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
@@ -27,6 +29,11 @@ export default function CreatePostButton() {
             .eq("id", data.user!.id)
             .single();
 
+        if (studentError || student === null) {
+            alert("There was an error creating your post. Please try again later." + studentError?.message ?? "");
+            return;
+        }
+
         // Id(s) has(/have) been checked to death, has to exist
         const { data: insertData, error: insertError } = await supabase
             .from("posts")
@@ -39,11 +46,15 @@ export default function CreatePostButton() {
             .select();
 
         if (insertError || insertData === null) {
-            alert("There was an error creating your post. Please try again later.");
+            alert("There was an error creating your post. Please try again later.\n" + insertError?.message ?? "");
             return;
         }
 
+        // Update state
+        setIsSubmitting(false);
         setIsCreating(false);
+        // https://nextjs.org/docs/app/building-your-application/caching#routerrefresh
+        router.refresh();
     };
 
     return (
@@ -51,6 +62,7 @@ export default function CreatePostButton() {
             <button className="btn" onClick={() => setIsCreating(!isCreating)}>
                 {isCreating ? (
                     <>
+                        {/* Cancel Icon */}
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-5 h-5">
                             <path
                                 fillRule="evenodd"
@@ -62,7 +74,7 @@ export default function CreatePostButton() {
                     </>
                 ) : (
                     <>
-                        <PlusIcon />
+                        <PlusIcon className={`${isSubmitting ? "animate-pulse" : ""}`} />
                         <span>Create New</span>
                     </>
                 )}
