@@ -5,7 +5,7 @@ import Content from "./overview";
 import WeeklyContent from "./weekly";
 import Respite from "./break";
 
-// Server Component with three interactive (client) components: Notes/Modules, Assignments, Break
+// Server Component with three interactive (client) components: Notes/Modules, Assignments, Respite
 export default async function Study() {
     const supabase = createServerComponentClient<Database>({ cookies });
     const { data } = await supabase.auth.getUser();

@@ -28,7 +28,7 @@ export default async function HubLayout({ children }: { children: React.ReactNod
                     <HamburgerMenu />
                 </div>
             </nav>
-            <div className="lg:mt-32 mt-24 pb-5">{children}</div>
+            <div className="lg:mt-32 mt-28 pb-5">{children}</div>
         </>
     );
 }

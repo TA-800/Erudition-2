@@ -44,7 +44,12 @@ export default async function Discussions() {
 
     return (
         <>
-            <h1 className="lg:text-6xl text-3xl center-pad text-white mb-5">Discussions</h1>
+            <div className="center-pad mb-5">
+                <h1 className="lg:text-6xl text-3xl text-white">DISCUSSIONS</h1>
+                <p className="opacity-75">
+                    Welcome to the Discussions page! Here, you can post questions, and answer other people's questions.
+                </p>
+            </div>
             <div className="center-pad">
                 <div className="border border-white/20 p-4 rounded flex flex-col gap-2">
                     <CreatePostButton />

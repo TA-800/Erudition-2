@@ -10,7 +10,7 @@ export default function PostWrapper({ post, isInPage = false }: { post: Post; is
                 <Link href={`/hub/discussions/${post.id}`}>{post.title}</Link>
             )}
             <div className="opacity-75">{post.description}</div>
-            <div className="opacity-75 flex gap-1 items-center">
+            <div className="opacity-75 flex gap-1 items-center mt-1">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-5 h-5">
                     <path
                         fillRule="evenodd"

@@ -15,6 +15,7 @@ export default function HamburgerMenu() {
         }
     };
 
+    // Read hooks docs, handler is passed an event parameter
     const handleClickOutside = (event: MouseEvent) => {
         console.log(event.target !== menuButtonRef.current);
         if (open && event.target !== menuButtonRef.current) setOpen(false);
@@ -26,8 +27,7 @@ export default function HamburgerMenu() {
         return () => document.removeEventListener("keydown", closeMenuOnEscape);
     }, [open]);
 
-    // Default is mousedown param, which we do not want because
-    // if it is clicked on the menu, it will quickly close and open
+    // https://usehooks-ts.com/react-hook/use-on-click-outside
     useOnClickOutside(ref, handleClickOutside, "mouseup");
 
     return (

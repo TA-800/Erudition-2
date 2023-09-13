@@ -14,7 +14,12 @@ export default async function Profile() {
 
     return (
         <>
-            <h1 className="lg:text-6xl text-3xl center-pad mb-5">Profile</h1>
+            <div className="center-pad mb-5">
+                <h1 className="lg:text-6xl text-3xl text-white">PROFILE</h1>
+                <p className="opacity-75">
+                    Change your student data on this page here. You can change your education institution, and your current year.
+                </p>
+            </div>
 
             <form action="/hub/profile/api" method="post" className="center-pad flex flex-col gap-4">
                 <div className="flex flex-col gap-2">
@@ -23,7 +28,7 @@ export default async function Profile() {
                     Only fetch data when clicked on. */}
                     <SelectEI name="ei_id" eiId={students?.length ? students.at(0)!.ei_id : null} />
                     <p className="md:text-sm text-xs opacity-75">
-                        Changing your E.I. will unenroll you from all your courses, and your modules and assignments will be lost.
+                        Changing E.I. will unenroll you from all courses, and your modules & assignments will be lost.
                     </p>
                 </div>
                 <div className="flex flex-col gap-2">
