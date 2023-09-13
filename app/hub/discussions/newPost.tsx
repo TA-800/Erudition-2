@@ -59,7 +59,7 @@ export default function CreatePostButton() {
 
     return (
         <>
-            <button className="btn" onClick={() => setIsCreating(!isCreating)}>
+            <button className="btn btn-primary" onClick={() => setIsCreating(!isCreating)}>
                 {isCreating ? (
                     <>
                         {/* Cancel Icon */}

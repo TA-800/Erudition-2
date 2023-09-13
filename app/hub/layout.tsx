@@ -17,7 +17,7 @@ export default async function HubLayout({ children }: { children: React.ReactNod
     // Children content is the page content (depending on which link is clicked)
     return (
         <>
-            <nav className="bg-zinc-900 w-full fixed top-0 left-0 flex justify-end items-center border-b border-b-white/20 lg:h-24 h-20 lg:px-32 px-4 z-50">
+            <nav className="bg-zinc-900 w-full fixed top-0 left-0 flex justify-end items-center border-b border-b-white/20 h-24 lg:px-32 px-4 z-50">
                 <div className="lg:text-4xl text-3xl mr-auto">Erudition</div>
                 <div className="flex-row gap-2 lg:flex hidden">
                     <CustomLink href="/hub/study">Study</CustomLink>

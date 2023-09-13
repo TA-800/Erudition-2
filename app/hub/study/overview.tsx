@@ -180,35 +180,12 @@ export default function Content({ doesExistInStudentData, userId }: { doesExistI
         else setSelectedAssignments((prev) => prev.filter((a) => a.id !== assignment.id));
     };
 
-    // Fetch courses + assignment listener
+    // Fetch courses
     useEffect(() => {
         fetchCoursesForStudent().finally(() => setLoadingCourses(false));
-
-        const assigmentsTableListener = supabase
-            .channel("assignments_table_changes_overview")
-            .on(
-                "postgres_changes",
-                {
-                    event: "*",
-                    schema: "public",
-                    table: "assignments",
-                },
-                (payload) => {
-                    if (content === "Assignments" && selectedCourse) {
-                        setSelectedAssignments([]);
-                        setLoadingAssignments(true);
-                        fetchAssignmentsForCourse(selectedCourse!.id).then(() => setLoadingAssignments(false));
-                    }
-                }
-            )
-            .subscribe();
-
-        return () => {
-            assigmentsTableListener.unsubscribe();
-        };
     }, []);
 
-    // Fetch modules / assignments for course
+    // Fetch modules / assignments for course + assignment listener
     useEffect(() => {
         if (!selectedCourse) return;
         if (content === "Modules") {
@@ -221,6 +198,34 @@ export default function Content({ doesExistInStudentData, userId }: { doesExistI
             setLoadingAssignments(true);
             fetchAssignmentsForCourse(selectedCourse.id).then(() => setLoadingAssignments(false));
         }
+
+        // Listener needs to update with update in states or else the if statement won't have updated state values
+        // Listener is left behind with old state values that's why it must be redefined
+        const assigmentsTableListener = supabase
+            .channel("assignments_table_changes_overview")
+            .on(
+                "postgres_changes",
+                {
+                    event: "*",
+                    schema: "public",
+                    table: "assignments",
+                },
+                (payload) => {
+                    // console.log("Heard changes from overview");
+                    // console.log(`Content: ${content}, selectedCourse: ${selectedCourse}`);
+                    if (content === "Assignments" && selectedCourse) {
+                        console.log("Should refetch assignments from overview");
+                        setSelectedAssignments([]);
+                        setLoadingAssignments(true);
+                        fetchAssignmentsForCourse(selectedCourse!.id).then(() => setLoadingAssignments(false));
+                    }
+                }
+            )
+            .subscribe();
+
+        return () => {
+            assigmentsTableListener.unsubscribe();
+        };
     }, [selectedCourse, content]);
 
     if (!doesExistInStudentData) {
