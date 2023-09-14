@@ -38,7 +38,7 @@ export default function NewComment({ postId }: { postId: Number }) {
     };
 
     return (
-        <form onSubmit={handleNewCommentSubmit} className="border border-white/20 p-4 flex flex-col gap-1">
+        <form onSubmit={handleNewCommentSubmit} className="border border-white/20 rounded p-4 flex flex-col gap-1">
             <label htmlFor="comment" className="opacity-75 text-sm">
                 Add your comments to this discussion
             </label>

@@ -2,6 +2,12 @@ import { createServerComponentClient } from "@supabase/auth-helpers-nextjs";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import HamburgerMenu, { CustomLink } from "./menu";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+    title: "Erudition",
+    description: "Manage your studies, assignments, and more.",
+};
 
 export default async function HubLayout({ children }: { children: React.ReactNode }) {
     const supabase = createServerComponentClient({ cookies });
@@ -11,10 +17,7 @@ export default async function HubLayout({ children }: { children: React.ReactNod
     } = await supabase.auth.getUser();
 
     if (!user) redirect("/");
-    // Links to the various pages in the hub: study, discussions, profile
 
-    // Nav bar to the top of the page with Erudition text to the left, and the three links to the right
-    // Children content is the page content (depending on which link is clicked)
     return (
         <>
             <nav className="bg-zinc-900 w-full fixed top-0 left-0 flex justify-end items-center border-b border-b-white/20 h-24 lg:px-32 px-4 z-50">

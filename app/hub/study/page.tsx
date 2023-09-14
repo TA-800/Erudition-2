@@ -26,7 +26,9 @@ export default async function Study() {
                         src={data.user!.user_metadata.avatar_url}
                         className="lg:w-16 w-12 lg:h-16 h-12 rounded border border-white/20 inline-block"
                     />
-                    <span className="lg:text-6xl text-3xl tracking-tight font-bold">{data.user!.user_metadata.full_name}</span>
+                    <span className="lg:text-6xl text-3xl text-white tracking-tight font-bold">
+                        {data.user!.user_metadata.full_name}
+                    </span>
                 </div>
                 <p className="opacity-75">Signed in as {data.user!.email}</p>
             </div>

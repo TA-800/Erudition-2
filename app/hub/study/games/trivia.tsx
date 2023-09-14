@@ -64,6 +64,7 @@ export default function Trivia() {
     );
 }
 
+// TODO: differentiate between chosen and correct answer
 function Question({ question }: { question: Question }) {
     // State of the question
     const [answered, setAnswered] = useState(false);

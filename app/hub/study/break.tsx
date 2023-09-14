@@ -9,7 +9,7 @@ import Search from "./games/search";
 import Hangman from "./games/hang";
 
 export default function Respite() {
-    const [game, setGame] = useState<"trivia" | "hangman" | "search">("trivia");
+    const [game, setGame] = useState<"trivia" | "hangman" | "search">("hangman");
 
     return (
         <SectionWrapper>

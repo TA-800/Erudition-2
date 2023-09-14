@@ -274,7 +274,7 @@ export default function Content({ doesExistInStudentData, userId }: { doesExistI
                 {content === "Modules" && (
                     <div className="w-full grid gap-1 lg:grid-cols-3 lg:grid-rows-none">
                         {/* Modules */}
-                        <div className="flex flex-col gap-4 p-2 border border-white/20 rounded w-full h-96 lg:h-full overflow-y-scroll">
+                        <div className="flex flex-col gap-4 p-2 border border-white/20 rounded w-full h-full overflow-y-scroll">
                             {loadingModules && <p>Loading modules...</p>}
                             {/* If we have no modules */}
                             {!loadingModules && modules.length === 0 && <p>No modules found.</p>}
@@ -339,14 +339,15 @@ export default function Content({ doesExistInStudentData, userId }: { doesExistI
     );
 }
 
-export function AssignmentWrapper({ children }: { children: React.ReactNode }) {
-    return <div className="grid grid-cols-4 gap-1 border border-white/10 rounded p-1 lg:p-4">{children}</div>;
-}
-
 export function SectionWrapper({ children }: { children: React.ReactNode }) {
+    // add min-h here to add minimum height to the section
     return <div className="w-full h-fit flex lg:flex-row flex-col gap-4">{children}</div>;
 }
 
 export function ContentPanelWrapper({ children }: { children: React.ReactNode }) {
     return <div className="bg-black/10 rounded border border-white/10 p-4 flex flex-col w-full gap-2">{children}</div>;
+}
+
+export function AssignmentWrapper({ children }: { children: React.ReactNode }) {
+    return <div className="grid grid-cols-4 gap-1 border border-white/10 rounded p-1 lg:p-4">{children}</div>;
 }

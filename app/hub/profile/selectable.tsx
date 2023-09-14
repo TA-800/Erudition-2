@@ -38,7 +38,7 @@ export default forwardRef<HTMLSelectElement, ComponentProps<"select"> & { eiId: 
             ) : (
                 // else, show list of EIs
                 list.map((ei) => (
-                    <option selected={eiId === ei.id} value={ei.id}>
+                    <option key={ei.id} selected={eiId === ei.id} value={ei.id}>
                         {ei.name}
                     </option>
                 ))

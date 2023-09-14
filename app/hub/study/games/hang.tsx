@@ -39,7 +39,7 @@ export default function Hangman() {
     return (
         <div className="flex flex-col gap-4">
             <div className="flex justify-between">
-                <span className="inline-flex gap-3">
+                <div className="inline-flex gap-3">
                     {word!.split("").map((letter, index) => {
                         return (
                             <span className="text-3xl font-black" key={index}>
@@ -47,7 +47,7 @@ export default function Hangman() {
                             </span>
                         );
                     })}
-                </span>
+                </div>
                 <span>{6 - chances} / 6</span>
             </div>
             <div className="flex flex-wrap gap-4">
