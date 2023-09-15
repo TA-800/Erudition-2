@@ -46,7 +46,7 @@ export default async function Index() {
                 {/* Features */}
                 <div className="flex flex-col gap-4">
                     <h2 className="text-3xl font-bold text-center">Features</h2>
-                    <div className="flex flex-col lg:flex-row lg:flex-wrap gap-4 justify-center">
+                    <div className="flex flex-col lg:flex-row lg:flex-wrap gap-4 justify-center items-center">
                         <FeatureBox title="Study">Keep track of your assignments, notes, and more.</FeatureBox>
                         <FeatureBox title="Break">
                             Take a break from studying with our collection of games and other fun activities.
