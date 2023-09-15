@@ -14,7 +14,7 @@
 
 @layer components {
     .btn {
-        @apply bg-zinc-700 text-zinc-300 py-2 px-4 rounded border border-white/10 h-12 flex flex-row gap-1 justify-center items-center;
+        @apply bg-zinc-700 text-zinc-300 hover:text-white py-2 px-4 rounded border border-white/10 hover:border-white/20 h-12 flex flex-row gap-1 justify-center items-center;
     }
 
     .btn-active {

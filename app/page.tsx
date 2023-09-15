@@ -1,9 +1,11 @@
 import { createServerComponentClient } from "@supabase/auth-helpers-nextjs";
 import { cookies } from "next/headers";
 import Link from "next/link";
-import LogoutButton from "../utils/LogoutButton";
+import LogoutButton, { GoToHubButton } from "@/utils/LandingButtons";
+import { Inter } from "next/font/google";
 
 export const dynamic = "force-dynamic";
+const inter = Inter({ subsets: ["latin"] });
 
 export default async function Index() {
     const supabase = createServerComponentClient({ cookies });
@@ -21,6 +23,7 @@ export default async function Index() {
                         {user ? (
                             <div className="flex items-center gap-4">
                                 Hey, {user.user_metadata.name}!
+                                <GoToHubButton />
                                 <LogoutButton />
                             </div>
                         ) : (
@@ -34,19 +37,18 @@ export default async function Index() {
 
             <div className="flex flex-col gap-14 max-w-4xl py-16 lg:py-24">
                 <div className="flex flex-col gap-4">
-                    <h1 className="text-5xl font-bold text-center">
+                    <h1 className={`${inter.className} text-5xl font-black uppercase text-center`}>
                         Looking for a better way to manage your studies? <br />
-                        <span className="text-3xl font-normal">Erudition is here to help.</span>
                     </h1>
                     <p className="text-center opacity-75">
-                        Erudition is a study management tool that helps you keep track of your assignments, notes, and more.
+                        Erudition is a study management website that helps you keep track of your assignments, notes, and more.
                     </p>
                 </div>
 
                 {/* Features */}
                 <div className="flex flex-col gap-4">
                     <h2 className="text-3xl font-bold text-center">Features</h2>
-                    <div className="flex flex-col lg:flex-row lg:flex-wrap gap-4 justify-center items-center">
+                    <div className="flex flex-col lg:flex-row lg:flex-wrap gap-4 justify-center lg:items-stretch items-center">
                         <FeatureBox title="Study">Keep track of your assignments, notes, and more.</FeatureBox>
                         <FeatureBox title="Break">
                             Take a break from studying with our collection of games and other fun activities.

@@ -187,8 +187,6 @@ function AddCourseDialog({
 
     // Update getAllButEnrolledCoursesForStudent when courses state changes (e.g. when a course is deleted)
     useEffect(() => {
-        if (courses.length === 0) return;
-
         getEIOfStudent().then((ei_id_response: number | null | undefined) => {
             if (!ei_id_response) {
                 alert("Could not find your EI ID. Please save your student data in Profile and try again.");
