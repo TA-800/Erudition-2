@@ -29,29 +29,22 @@ As a college student, it is easy to suffer from information overload when taking
 
 <p align="left">
     <a href="https://reactjs.org/" target="_blank" rel="noreferrer"> <img src="https://user-images.githubusercontent.com/25181517/183897015-94a058a6-b86e-4e42-a37f-bf92061753e5.png" alt="React" width="40" height="40"/> </a>
-    <a href="https://www.python.org/" target="_blank" rel="noreferrer"> <img src="https://user-images.githubusercontent.com/25181517/183423507-c056a6f9-1ba8-4312-a350-19bcbc5a8697.png" alt="Django" width="40" height="40"/> </a>
     <a href="https://tailwindcss.com/" target="_blank" rel="noreferrer"> <img src="https://user-images.githubusercontent.com/25181517/202896760-337261ed-ee92-4979-84c4-d4b829c7355d.png" alt="Tailwind" width="40" height="40"/> </a>
     <a href="https://www.javascript.com/" target="_blank" rel="noreferrer"> <img src="https://user-images.githubusercontent.com/25181517/117447155-6a868a00-af3d-11eb-9cfe-245df15c9f3f.png" alt="Javascript" width="40" height="40"/> </a>
     <a href="https://www.postgresql.org/" target="_blank" rel="noreferrer"> <img src="https://user-images.githubusercontent.com/25181517/117208740-bfb78400-adf5-11eb-97bb-09072b6bedfc.png" alt="PostgreSQL" width="40" height="40"/> </a>
-    <a href="https://aws.amazon.com/" target="_blank" rel="noreferrer"> <img src="https://user-images.githubusercontent.com/25181517/183896132-54262f2e-6d98-41e3-8888-e40ab5a17326.png" alt="AWS" width="40" height="40"/> </a>
-    <a href="https://railway.app/" target="_blank" rel="noreferrer"> <img src="https://railway.app/brand/logo-light.png" alt="Railway" width="40" height="40"/> </a>
 </p>
 
 Erudition is built on the following tech stack:
 
--   [React](https://reactjs.org/) (Frontend)
--   [Django](https://www.djangoproject.com/) (Backend)
+-   [React & Next 13](https://nextjs.org/) (Frontend)
+-   [PostgreSQL & Supabase](https://supabase.com) (Backend & Authentication)
 -   [Tailwind CSS](https://tailwindcss.com/) (CSS Framework)
--   [Simple JWT](https://django-rest-framework-simplejwt.readthedocs.io/en/latest/) (Authentication)
--   [PostgreSQL](https://www.postgresql.org/) (Database)
--   [AWS S3](https://aws.amazon.com/s3/) (File Storage)
--   [Railway](https://railway.app/) (Deployment)
 
 The website is designed to be mobile-friendly (responsive) and can be run on almost any device with a web browser.
 
 ## Roadmap
 
--   [x] Landing page
+-   [ ] Landing page
 -   [ ] Click on user profiles and see all information
 -   [ ] Hangman, Snake games and more in the "Distract" section
 -   [x] Auto generate a number of assignments (daily, weekly, monthly)
