@@ -21,6 +21,8 @@ export default function CreatePostButton() {
         const title = String(formData.get("title"));
         const description = String(formData.get("description"));
 
+        if (title.length === 0) return;
+
         // Create new post
         const { data } = await supabase.auth.getUser();
         const { data: student, error: studentError } = await supabase
@@ -82,7 +84,7 @@ export default function CreatePostButton() {
 
             {isCreating && (
                 <form onSubmit={handleNewPostSubmit} className="border border-white/10 rounded p-2 lg:p-4 flex flex-col gap-1">
-                    <input name="title" className="ipt" type="text" placeholder="Title" />
+                    <input required name="title" className="ipt" type="text" placeholder="Title" />
                     <textarea name="description" className="ipt" placeholder="Description" />
                     <button className="btn">Create</button>
                 </form>

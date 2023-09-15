@@ -73,6 +73,11 @@
     scrollbar-color: rgb(82 82 91) rgb(63 63 70);
 }
 
+/* Hide x-overflow, no scrolling */
+body {
+    overflow-x: hidden;
+}
+
 ol {
     list-style-type: decimal;
 }

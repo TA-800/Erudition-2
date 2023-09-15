@@ -344,8 +344,12 @@ export function SectionWrapper({ children }: { children: React.ReactNode }) {
     return <div className="w-full h-fit flex lg:flex-row flex-col gap-4">{children}</div>;
 }
 
-export function ContentPanelWrapper({ children }: { children: React.ReactNode }) {
-    return <div className="bg-black/10 rounded border border-white/10 p-4 flex flex-col w-full gap-2">{children}</div>;
+export function ContentPanelWrapper({ children, className }: { children: React.ReactNode; className?: string }) {
+    return (
+        <div className={`bg-black/10 rounded border border-white/10 p-4 flex flex-col w-full gap-2 ${className ?? ""}`}>
+            {children}
+        </div>
+    );
 }
 
 export function AssignmentWrapper({ children }: { children: React.ReactNode }) {

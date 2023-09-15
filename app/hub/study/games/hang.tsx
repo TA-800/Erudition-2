@@ -37,7 +37,7 @@ export default function Hangman() {
     };
 
     return (
-        <div className="flex flex-col gap-4">
+        <div className="h-full flex flex-col gap-4">
             <div className="flex justify-between">
                 <div className="inline-flex gap-3">
                     {word!.split("").map((letter, index) => {
@@ -61,7 +61,7 @@ export default function Hangman() {
                     </button>
                 ))}
             </div>
-            <p onClick={reset} className="underline underline-offset-2 text-right cursor-pointer">
+            <p onClick={reset} className="underline underline-offset-2 cursor-pointer self-end mt-auto">
                 Reset
             </p>
         </div>
