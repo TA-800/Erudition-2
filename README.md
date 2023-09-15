@@ -46,7 +46,7 @@ The website is designed to be mobile-friendly (responsive) and can be run on alm
 
 -   [ ] Landing page
 -   [ ] Click on user profiles and see all information
--   [ ] Hangman, Snake games and more in the "Distract" section
+-   [ ] Word Search, snake and more games in the "Distract" section
 -   [x] Auto generate a number of assignments (daily, weekly, monthly)
 
 ... more features to come in the future

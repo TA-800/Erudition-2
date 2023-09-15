@@ -2,12 +2,6 @@ import { createServerComponentClient } from "@supabase/auth-helpers-nextjs";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import HamburgerMenu, { CustomLink } from "./menu";
-import { Metadata } from "next";
-
-export const metadata: Metadata = {
-    title: "Erudition",
-    description: "Manage your studies, assignments, and more.",
-};
 
 export default async function HubLayout({ children }: { children: React.ReactNode }) {
     const supabase = createServerComponentClient({ cookies });
