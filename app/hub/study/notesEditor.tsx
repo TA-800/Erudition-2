@@ -30,10 +30,11 @@ export default function NotesEditor({
             TextAlign.configure({ types: ["heading", "paragraph"] }),
         ],
         content: selectedModule.notes ?? content,
+        editable: false,
     });
 
     // Need state to force re-render (updates to editor.isEditable don't re-render)
-    const [editing, setEditing] = useState(true);
+    const [editing, setEditing] = useState(false);
 
     const handleEditorContentSave = async () => {
         if (!editor) return;

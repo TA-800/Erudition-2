@@ -83,6 +83,7 @@ export default function AddAssignmentDialog({ userId, courses }: { userId: strin
                                 <input
                                     required
                                     defaultValue={1}
+                                    min={1}
                                     className="ipt bg-zinc-200"
                                     type="number"
                                     name="number"

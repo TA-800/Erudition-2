@@ -1,7 +1,6 @@
 import { createServerComponentClient } from "@supabase/auth-helpers-nextjs";
 import { cookies } from "next/headers";
-import Link from "next/link";
-import LogoutButton, { GoToHubButton } from "@/utils/LandingButtons";
+import LogoutButton, { GoToHubButton, LoginButton } from "@/utils/LandingButtons";
 import { Inter } from "next/font/google";
 
 export const dynamic = "force-dynamic";
@@ -27,9 +26,7 @@ export default async function Index() {
                                 <LogoutButton />
                             </div>
                         ) : (
-                            <Link href="/login" className="py-2 px-4 rounded-md no-underline bg-black hover:bg-gray-800">
-                                Login
-                            </Link>
+                            <LoginButton />
                         )}
                     </div>
                 </div>
@@ -37,8 +34,8 @@ export default async function Index() {
 
             <div className="flex flex-col gap-14 max-w-4xl py-16 lg:py-24">
                 <div className="flex flex-col gap-4">
-                    <h1 className={`${inter.className} text-5xl font-black uppercase text-center`}>
-                        Looking for a better way to manage your studies? <br />
+                    <h1 className={`${inter.className} text-4xl lg:text-5xl font-black uppercase text-center`}>
+                        Looking for a better way to manage your studies?
                     </h1>
                     <p className="text-center opacity-75">
                         Erudition is a study management website that helps you keep track of your assignments, notes, and more.
@@ -51,7 +48,7 @@ export default async function Index() {
                     <div className="flex flex-col lg:flex-row lg:flex-wrap gap-4 justify-center lg:items-stretch items-center">
                         <FeatureBox title="Study">Keep track of your assignments, notes, and more.</FeatureBox>
                         <FeatureBox title="Break">
-                            Take a break from studying with our collection of games and other fun activities.
+                            Take a break from studying with a collection of games and other fun activities.
                         </FeatureBox>
 
                         <FeatureBox title="Profile">Profile page where you can manage your student data.</FeatureBox>

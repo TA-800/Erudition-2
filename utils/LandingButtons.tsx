@@ -15,3 +15,11 @@ export function GoToHubButton() {
         </Link>
     );
 }
+
+export function LoginButton() {
+    return (
+        <Link href="/login" className="btn btn-primary">
+            Login
+        </Link>
+    );
+}
