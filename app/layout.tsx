@@ -1,11 +1,12 @@
 import "./globals.css";
 import { Metadata } from "next";
 
+// https://github.com/vercel/next.js/issues/49373
+export const dynamic = "force-dynamic";
 export const metadata: Metadata = {
     title: "Erudition",
     description: "Manage your studies, assignments, and more.",
 };
-// const inter = Inter({ subsets: ["latin"] });
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
     return (
