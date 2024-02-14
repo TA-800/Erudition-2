@@ -4,6 +4,10 @@
 
 As a college student, it is easy to suffer from information overload when taking several courses simultaneously. Erudition serves as a platform to help students organize and manage their learning materials. It is a simple, easy-to-use, and free platform that allows students to manage their coursework and schedules in one place.
 
+## Website Demo
+
+https://github.com/TA-800/Erudition-2/assets/31612100/11847344-bd42-4521-a248-9458bc181233
+
 ## Website Overview
 
 ![image](https://github.com/TA-800/Erudition-2/assets/31612100/595aace0-d10d-45fa-9e73-124207b28079)
